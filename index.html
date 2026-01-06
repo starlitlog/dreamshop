@@ -1,0 +1,1878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- TODO: Update title and description for your shop -->
+  <title>Your Shop Name - Tagline Here</title>
+  <meta name="description" content="Your shop description. What do you sell? What makes it special?">
+  <link rel="icon" type="image/png" href="icon.png">
+
+  <!-- SEO Meta Tags - TODO: Update for your shop -->
+  <meta name="keywords" content="your, keywords, here">
+  <meta name="author" content="Your Shop Name">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://your-domain.com">
+
+  <!-- Open Graph / Facebook - TODO: Update for your shop -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://your-domain.com">
+  <meta property="og:title" content="Your Shop Name - Tagline">
+  <meta property="og:description" content="Your shop description for social sharing.">
+  <meta property="og:image" content="https://your-domain.com/icon.png">
+  <meta property="og:image:width" content="512">
+  <meta property="og:image:height" content="512">
+  <meta property="og:site_name" content="Your Shop Name">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter Cards - TODO: Update for your shop -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://your-domain.com">
+  <meta name="twitter:title" content="Your Shop Name - Tagline">
+  <meta name="twitter:description" content="Your shop description for social sharing.">
+  <meta name="twitter:image" content="https://your-domain.com/icon.png">
+
+  <!-- Additional Meta Tags -->
+  <meta name="theme-color" content="#8B5CF6">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Your Shop Name">
+
+  <!-- Schema.org structured data - TODO: Update for your shop -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Store",
+    "name": "Your Shop Name",
+    "description": "Your shop description",
+    "url": "https://your-domain.com",
+    "logo": "https://your-domain.com/icon.png",
+    "image": "https://your-domain.com/icon.png",
+    "address": {
+      "@type": "PostalAddress",
+      "addressRegion": "XX",
+      "addressCountry": "US"
+    },
+    "founder": {
+      "@type": "Person",
+      "name": "Your Name"
+    },
+    "makesOffer": {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Product",
+        "name": "Your Products",
+        "description": "Description of what you sell"
+      }
+    },
+    "paymentAccepted": ["Credit Card", "Debit Card"],
+    "currenciesAccepted": "USD"
+  }
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    [x-cloak] { display: none !important; }
+    html, body { 
+      font-family: 'Comic Neue', cursive; 
+      overflow-x: hidden; 
+      max-width: 100vw;
+      box-sizing: border-box;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    .container {
+      width: 100%;
+      max-width: 100vw;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    h1, h2, h3, .brand { font-family: 'Fredoka', sans-serif; }
+    .gradient-text { background: linear-gradient(135deg, #8B5CF6, #EC4899, #3B82F6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .card-hover { transition: transform 0.3s, box-shadow 0.3s; }
+    .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2); }
+    .blob { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-purple-50 via-pink-50 to-blue-50 min-h-screen">
+
+<div x-data="shop()" x-init="init()" x-cloak>
+  
+  <!-- Header -->
+  <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between relative">
+      <a href="#" @click.prevent="page = 'home'" class="flex items-center gap-3 group">
+        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 blob flex items-center justify-center text-white text-xl font-bold shadow-lg">3D</div>
+        <div>
+          <!-- TODO: Update your shop name and tagline -->
+          <h1 class="text-2xl font-bold brand gradient-text">Your Shop</h1>
+          <p class="text-xs text-gray-500">Your tagline here</p>
+        </div>
+      </a>
+      
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex items-center gap-4">
+        <button @click="page = 'home'" class="text-gray-600 hover:text-purple-600 font-medium px-3 py-2 rounded-lg transition-colors" :class="page === 'home' && 'text-purple-600 bg-purple-50'">Shop</button>
+        <button @click="page = 'deals'" class="text-gray-600 hover:text-purple-600 font-medium px-3 py-2 rounded-lg transition-colors" :class="page === 'deals' && 'text-purple-600 bg-purple-50'">Deals</button>
+        <button @click="page = 'events'" class="text-gray-600 hover:text-purple-600 font-medium px-3 py-2 rounded-lg transition-colors" :class="page === 'events' && 'text-purple-600 bg-purple-50'">Events</button>
+        <button @click="page = 'about'" class="text-gray-600 hover:text-purple-600 font-medium px-3 py-2 rounded-lg transition-colors" :class="page === 'about' && 'text-purple-600 bg-purple-50'">About</button>
+        <button @click="page = 'cart'" class="relative bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full font-medium hover:shadow-lg transition-all flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+          Cart
+          <span x-show="cartCount > 0" x-text="cartCount" class="absolute -top-2 -right-2 bg-yellow-400 text-purple-900 w-6 h-6 rounded-full text-sm font-bold flex items-center justify-center"></span>
+        </button>
+      </nav>
+
+      <!-- Mobile Navigation -->
+      <div class="md:hidden flex items-center gap-2">
+        <!-- Mobile Cart Button -->
+        <button @click="page = 'cart'" class="relative bg-gradient-to-r from-purple-500 to-pink-500 text-white p-2 rounded-full font-medium hover:shadow-lg transition-all">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+          <span x-show="cartCount > 0" x-text="cartCount" class="absolute -top-2 -right-2 bg-yellow-400 text-purple-900 w-6 h-6 rounded-full text-sm font-bold flex items-center justify-center"></span>
+        </button>
+        
+        <!-- Burger Menu Button -->
+        <button @click="showMobileMenu = !showMobileMenu" class="p-2 text-gray-600 hover:text-purple-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path x-show="!showMobileMenu" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            <path x-show="showMobileMenu" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Mobile Menu Dropdown -->
+    <div x-show="showMobileMenu" x-transition.opacity.duration.200ms @click.away="showMobileMenu = false" class="md:hidden bg-white border-t shadow-lg">
+      <nav class="max-w-6xl mx-auto px-4 py-4 space-y-2">
+        <button @click="page = 'home'; showMobileMenu = false" class="w-full text-left text-gray-600 hover:text-purple-600 font-medium py-3 px-2 rounded-lg transition-colors" :class="page === 'home' && 'text-purple-600 bg-purple-50'">🏠 Shop</button>
+        <button @click="page = 'deals'; showMobileMenu = false" class="w-full text-left text-gray-600 hover:text-purple-600 font-medium py-3 px-2 rounded-lg transition-colors" :class="page === 'deals' && 'text-purple-600 bg-purple-50'">🏷️ Deals</button>
+        <button @click="page = 'events'; showMobileMenu = false" class="w-full text-left text-gray-600 hover:text-purple-600 font-medium py-3 px-2 rounded-lg transition-colors" :class="page === 'events' && 'text-purple-600 bg-purple-50'">📅 Events</button>
+        <button @click="page = 'about'; showMobileMenu = false" class="w-full text-left text-gray-600 hover:text-purple-600 font-medium py-3 px-2 rounded-lg transition-colors" :class="page === 'about' && 'text-purple-600 bg-purple-50'">💜 About</button>
+      </nav>
+    </div>
+  </header>
+
+
+  <main class="max-w-6xl mx-auto px-4 py-8">
+    
+    <!-- Loading State -->
+    <div x-show="loading" class="text-center py-20">
+      <div class="inline-block w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+      <p class="mt-4 text-gray-500">Loading awesome prints...</p>
+    </div>
+
+    <!-- HOME PAGE -->
+    <div x-show="!loading && page === 'home'">
+      <!-- Hero - TODO: Update your welcome message -->
+      <div class="text-center mb-12">
+        <h2 class="text-4xl sm:text-5xl font-bold text-gray-800 mb-4">
+          Welcome to <span class="gradient-text">Your Shop</span>!
+        </h2>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-4">
+          Your welcome message here. Tell customers what makes your shop special!
+        </p>
+        <div class="inline-block bg-gradient-to-r from-green-100 to-emerald-100 border border-green-200 rounded-full px-6 py-2 text-green-700 font-medium text-sm">
+          🚚 FREE shipping on orders $25+ • 📍 Event pickup available
+        </div>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="max-w-md mx-auto mb-6">
+        <div class="relative flex gap-2">
+          <div class="relative flex-grow">
+            <input
+              type="text"
+              x-model="searchQuery"
+              @input="performSearch()"
+              placeholder="Search prints..."
+              class="w-full px-5 py-3 pl-12 pr-10 rounded-full border-2 border-purple-100 focus:border-purple-400 outline-none bg-white shadow-sm text-gray-700 placeholder-gray-400"
+            >
+            <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            <button
+              x-show="searchQuery"
+              @click="clearSearch()"
+              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter -->
+      <div class="flex justify-center gap-2 mb-8 flex-wrap">
+        <button @click="clearAllFilters()" class="px-4 py-2 rounded-full font-medium transition-all" :class="selectedTags.length === 0 && !madeByMeFilter ? 'bg-purple-600 text-white' : 'bg-white text-gray-600 hover:bg-purple-100'">All Prints</button>
+        <button @click="toggleMadeByMeFilter()" class="px-4 py-2 rounded-full font-medium transition-all" :class="madeByMeFilter ? 'bg-purple-600 text-white' : 'bg-white text-gray-600 hover:bg-purple-100'">✨ My Designs</button>
+        <template x-for="tag in availableTags" :key="tag">
+          <button @click="toggleTagFilter(tag)" class="px-4 py-2 rounded-full font-medium transition-all" :class="selectedTags.includes(tag) ? 'bg-purple-600 text-white' : 'bg-white text-gray-600 hover:bg-purple-100'" x-text="tag"></button>
+        </template>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <template x-for="product in products" :key="product.id">
+          <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover flex flex-col h-full">
+            <div class="relative h-48 bg-gradient-to-br from-purple-100 to-pink-100">
+              <img @click="openImageModal(product)" :src="product.image" :alt="product.name" class="w-full h-full object-cover cursor-pointer hover:opacity-90 transition-opacity">
+              <span x-show="product.pinned" class="absolute top-3 right-3 bg-gradient-to-r from-red-400 to-pink-400 text-white text-xs font-bold px-2 py-1 rounded-full shadow">📌</span>
+              <span x-show="product.madeByMe" class="absolute top-3 left-3 bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs font-bold px-3 py-1 rounded-full shadow">✨ My Design!</span>
+              <span x-show="product.images.length > 1" class="absolute bottom-3 right-3 bg-black/60 text-white text-xs px-2 py-1 rounded-full">📷 <span x-text="product.images.length"></span></span>
+            </div>
+            <div class="p-5 flex flex-col flex-grow">
+              <h3 class="text-xl font-bold text-gray-800" x-text="product.name"></h3>
+              <p class="text-gray-500 text-sm mb-3 line-clamp-2" x-text="product.description"></p>
+              
+              <!-- Tags -->
+              <div x-show="product.tags && product.tags.length > 0" class="mb-2">
+                <div class="flex gap-1 flex-wrap">
+                  <template x-for="tag in product.tags" :key="tag">
+                    <span class="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded-full" x-text="tag"></span>
+                  </template>
+                </div>
+              </div>
+              
+              <!-- Variants -->
+              <div x-show="product.colors && product.colors.length > 0" class="mb-3">
+                <p class="text-xs text-gray-400 mb-1">Colors:</p>
+                <div class="flex gap-1 flex-wrap">
+                  <template x-for="color in product.colors" :key="color">
+                    <span class="text-xs bg-gray-100 px-2 py-1 rounded-full" x-text="color"></span>
+                  </template>
+                </div>
+              </div>
+              
+              <!-- Price and Button - Always at bottom -->
+              <div class="flex items-center justify-between mt-auto">
+                <span class="text-2xl font-bold text-purple-600">$<span x-text="formatPrice(product.price)"></span></span>
+                <button @click="openProductModal(product)" class="bg-gradient-to-r from-green-400 to-emerald-500 text-white px-4 py-2 rounded-full font-medium hover:shadow-lg transition-all">
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+      
+      <!-- No Results -->
+      <div x-show="!loading && products.length === 0" class="text-center py-12">
+        <div class="text-6xl mb-4">🔍</div>
+        <p class="text-gray-500">
+          <span x-show="searchQuery && selectedTags.length === 0 && !madeByMeFilter">No products found for "<span x-text="searchQuery" class="font-medium"></span>"</span>
+          <span x-show="(searchQuery && (selectedTags.length > 0 || madeByMeFilter)) || (!searchQuery && (selectedTags.length > 0 || madeByMeFilter))">No products match your current filters.</span>
+          <span x-show="!searchQuery && selectedTags.length === 0 && !madeByMeFilter">No products available.</span>
+        </p>
+        <button x-show="searchQuery || selectedTags.length > 0 || madeByMeFilter" @click="searchQuery = ''; clearAllFilters()" class="mt-4 px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full font-medium transition-colors">
+          Clear Filters
+        </button>
+      </div>
+      
+      <!-- Load More / Loading More -->
+      <div x-show="hasMoreProducts || loadingMore" class="text-center mt-8">
+        <div x-show="loadingMore" class="inline-block w-8 h-8 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+        <button x-show="!loadingMore && hasMoreProducts" @click="loadMoreProducts()" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-full font-medium hover:shadow-lg transition-all">
+          Load More Products
+        </button>
+      </div>
+    </div>
+
+    <!-- DEALS PAGE -->
+    <div x-show="page === 'deals'" class="max-w-4xl mx-auto">
+      <!-- Hero -->
+      <div class="text-center mb-12">
+        <h2 class="text-4xl sm:text-5xl font-bold text-gray-800 mb-4">
+          <span class="gradient-text">Deals</span> & Savings! 🏷️
+        </h2>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+          Check out our current deals! Discounts are automatically applied at checkout when you qualify.
+        </p>
+      </div>
+
+      <!-- Loading State -->
+      <div x-show="loadingDeals" class="text-center py-20">
+        <div class="inline-block w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+        <p class="mt-4 text-gray-500">Loading deals...</p>
+      </div>
+
+      <!-- Deals Grid -->
+      <div x-show="!loadingDeals && deals.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <template x-for="deal in deals" :key="deal.id">
+          <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover">
+            <div class="bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 p-4 text-center">
+              <div class="text-white text-4xl font-bold">
+                <span x-text="deal.discountType === 'Percentage' ? deal.discountValue + '%' : '$' + deal.discountValue"></span>
+                <span class="text-xl font-normal">OFF</span>
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-gray-800 mb-2" x-text="deal.name"></h3>
+              <p x-show="deal.description" class="text-gray-500 mb-4" x-text="deal.description"></p>
+              <div class="flex items-center gap-2 text-sm">
+                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full font-medium">
+                  Min. order: $<span x-text="deal.minAmount"></span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <!-- No Deals -->
+      <div x-show="!loadingDeals && deals.length === 0" class="text-center py-12">
+        <div class="text-6xl mb-4">🎁</div>
+        <h3 class="text-2xl font-bold text-gray-700 mb-2">No Active Deals Right Now</h3>
+        <p class="text-gray-500 mb-6">Check back soon for exciting discounts and special offers!</p>
+        <button @click="page = 'home'" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-full font-bold hover:shadow-lg transition-all">
+          Browse Our Shop
+        </button>
+      </div>
+
+      <!-- CTA -->
+      <div x-show="!loadingDeals && deals.length > 0" class="mt-12 text-center">
+        <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-3xl p-8">
+          <h3 class="text-2xl font-bold text-gray-800 mb-4">Ready to Save?</h3>
+          <p class="text-gray-600 mb-6">Deals are automatically applied when your cart qualifies!</p>
+          <button @click="page = 'home'" class="inline-block bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-full font-bold hover:shadow-lg transition-all">
+            Start Shopping
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EVENTS PAGE -->
+    <div x-show="page === 'events'" class="max-w-4xl mx-auto">
+      <!-- Hero -->
+      <div class="text-center mb-12">
+        <h2 class="text-4xl sm:text-5xl font-bold text-gray-800 mb-4">
+          <!-- TODO: Update section header -->
+          Come Visit <span class="gradient-text">Our Shop</span>! 📍
+        </h2>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+          Find me at local markets and events! Come see all my latest prints in person and discover exclusive event-only items.
+        </p>
+      </div>
+
+      <!-- Filter -->
+      <div class="flex justify-center gap-2 mb-8 flex-wrap">
+        <button @click="eventFilter = 'upcoming'" class="px-4 py-2 rounded-full font-medium transition-all" :class="eventFilter === 'upcoming' ? 'bg-purple-600 text-white' : 'bg-white text-gray-600 hover:bg-purple-100'">Upcoming Events</button>
+        <button @click="eventFilter = 'past'" class="px-4 py-2 rounded-full font-medium transition-all" :class="eventFilter === 'past' ? 'bg-purple-600 text-white' : 'bg-white text-gray-600 hover:bg-purple-100'">Past Events</button>
+        <button @click="eventFilter = 'all'" class="px-4 py-2 rounded-full font-medium transition-all" :class="eventFilter === 'all' ? 'bg-purple-600 text-white' : 'bg-white text-gray-600 hover:bg-purple-100'">All Events</button>
+      </div>
+
+      <!-- Loading State -->
+      <div x-show="loadingEvents" class="text-center py-20">
+        <div class="inline-block w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+        <p class="mt-4 text-gray-500">Loading events...</p>
+      </div>
+
+      <!-- Events Grid -->
+      <div x-show="!loadingEvents" class="space-y-6">
+        <template x-for="event in filteredEvents" :key="event.id">
+          <div @click="openEventModal(event)" class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover cursor-pointer" :class="event.featured && 'ring-2 ring-yellow-400'">
+            <div class="p-6">
+              <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                <!-- Event Info -->
+                <div class="flex-grow">
+                  <div class="flex items-start gap-3 mb-4">
+                    <div class="flex-shrink-0">
+                      <div class="bg-gradient-to-br from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                        <span x-text="new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })"></span>
+                      </div>
+                      <div x-show="event.featured" class="bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full text-xs font-bold mt-1 text-center">
+                        ⭐ Featured
+                      </div>
+                    </div>
+                    <div class="flex-grow">
+                      <h3 class="text-2xl font-bold text-gray-800" x-text="event.name"></h3>
+                      <div x-show="event.eventType || (event.city && event.state)" class="flex items-center gap-2 text-gray-500 text-sm mt-1">
+                        <span x-show="event.eventType" x-text="event.eventType"></span>
+                        <span x-show="event.eventType && event.city && event.state">•</span>
+                        <span x-show="event.city && event.state" x-text="event.city + ', ' + event.state"></span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <p x-show="event.description" class="text-gray-600 mb-4" x-text="event.description"></p>
+                  
+                  <!-- Event Details -->
+                  <div class="space-y-2 text-sm text-gray-500">
+                    <div x-show="event.startTime || event.time" class="flex items-center gap-2">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                      <span>
+                        <span x-text="event.startTime || event.time"></span>
+                        <span x-show="event.endTime"> - <span x-text="event.endTime"></span></span>
+                      </span>
+                    </div>
+                    <div x-show="event.location" class="flex items-start gap-2">
+                      <svg class="w-4 h-4 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                      <span x-text="event.location"></span>
+                    </div>
+                    <div x-show="event.specialItems" class="flex items-start gap-2 text-purple-600">
+                      <svg class="w-4 h-4 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                      <span><strong>Special:</strong> <span x-text="event.specialItems"></span></span>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Actions -->
+                <div class="flex-shrink-0 flex flex-col gap-2">
+                  <div x-show="event.website" class="text-right">
+                    <a :href="event.website" target="_blank" class="inline-block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors">
+                      Event Info
+                    </a>
+                  </div>
+                  <div class="text-right">
+                    <span class="inline-block px-3 py-1 rounded-full text-xs font-medium" 
+                          :class="event.status === 'Upcoming' ? 'bg-green-100 text-green-800' : 
+                                 event.status === 'Completed' ? 'bg-gray-100 text-gray-600' : 
+                                 'bg-red-100 text-red-800'" 
+                          x-text="event.status">
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+      
+      <div x-show="!loadingEvents && filteredEvents.length === 0" class="text-center py-12">
+        <div class="text-6xl mb-4">📅</div>
+        <p class="text-gray-500">
+          <span x-show="eventFilter === 'upcoming'">No upcoming events scheduled. Check back soon!</span>
+          <span x-show="eventFilter === 'past'">No past events to show.</span>
+          <span x-show="eventFilter === 'all'">No events found.</span>
+        </p>
+      </div>
+      
+      <!-- Call to Action -->
+      <div x-show="!loadingEvents && eventFilter === 'upcoming'" class="mt-12 text-center">
+        <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-3xl p-8">
+          <h3 class="text-2xl font-bold text-gray-800 mb-4">Want Me at Your Event?</h3>
+          <p class="text-gray-600 mb-6">I love participating in local markets, school events, and community fairs!</p>
+          <button @click="showContactModal = true" class="inline-block bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-full font-bold hover:shadow-lg transition-all">
+            Contact Us
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABOUT PAGE -->
+    <div x-show="page === 'about'" class="max-w-2xl mx-auto">
+      <div class="bg-white rounded-3xl shadow-xl p-8">
+        <div class="text-center mb-6">
+          <div class="w-32 h-32 mx-auto bg-gradient-to-br from-purple-400 via-pink-400 to-blue-400 blob flex items-center justify-center text-6xl shadow-lg">👧🏻</div>
+          <!-- TODO: Update with your story -->
+          <h2 class="text-3xl font-bold text-gray-800 mt-6">Hi, I'm the Creator!</h2>
+        </div>
+        <div class="space-y-4 text-gray-600 text-lg">
+          <!-- TODO: Update with your about content -->
+          <p>Tell your story here. What makes your shop special? What do you create or sell?</p>
+          <p>Add your background, inspiration, and what customers can expect from you.</p>
+          <p>Share why you started this shop and what drives your passion.</p>
+        </div>
+        <div class="mt-8 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl text-center">
+          <p class="text-gray-600">📦 Ships anywhere! • 📍 Event pickup available too!</p>
+          <p class="text-sm text-gray-400 mt-1">Questions? Have a parent email us!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CART PAGE -->
+    <div x-show="page === 'cart'" class="max-w-2xl mx-auto">
+      <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Your Cart 🛒</h2>
+      
+      <!-- Payment Success -->
+      <div x-show="paymentSuccess" class="bg-white rounded-3xl shadow-xl p-8 text-center">
+        <div class="text-7xl mb-4">🎉</div>
+        <h3 class="text-2xl font-bold text-green-600">Payment Successful!</h3>
+        <p class="text-gray-600 mt-2 mb-6">Thank you so much for your order! I'll start working on it right away and ship it to you soon!</p>
+        <p class="text-sm text-gray-400 mb-4">You'll receive an email confirmation shortly.</p>
+        <button @click="paymentSuccess = false; page = 'home'" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg transition-all">← Continue Shopping</button>
+      </div>
+
+      <!-- Payment Cancelled -->
+      <div x-show="paymentCancelled" class="bg-white rounded-3xl shadow-xl p-8 text-center">
+        <div class="text-7xl mb-4">😢</div>
+        <h3 class="text-2xl font-bold text-orange-600">Payment Cancelled</h3>
+        <p class="text-gray-600 mt-2 mb-6">No worries! Your order is still saved. You can try again whenever you're ready.</p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <button @click="retryPayment()" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg transition-all">Try Payment Again</button>
+          <button @click="paymentCancelled = false; page = 'home'" class="text-purple-600 font-medium hover:underline px-6 py-3">← Continue Shopping</button>
+        </div>
+      </div>
+      
+      <!-- Empty Cart -->
+      <div x-show="!paymentSuccess && !paymentCancelled && cart.length === 0" class="bg-white rounded-3xl shadow-xl p-8 text-center">
+        <div class="text-6xl mb-4">🛒</div>
+        <p class="text-gray-500">Your cart is empty!</p>
+        <button @click="page = 'home'" class="mt-4 text-purple-600 font-medium hover:underline">← Go find something cool</button>
+      </div>
+      
+      <!-- Cart Items -->
+      <div x-show="!paymentSuccess && !paymentCancelled && cart.length > 0" class="space-y-4">
+        <div class="bg-white rounded-3xl shadow-xl p-6">
+          <template x-for="(item, index) in cart" :key="index">
+            <div class="flex items-center justify-between py-4 border-b last:border-0">
+              <div class="flex items-center gap-4">
+                <img :src="item.image" :alt="item.name" class="w-16 h-16 object-cover rounded-xl">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <p class="font-bold text-gray-800" x-text="item.name"></p>
+                    <span x-show="item.sku" class="text-xs font-mono bg-gray-100 text-gray-400 px-1.5 py-0.5 rounded">SKU: <span x-text="item.sku"></span></span>
+                  </div>
+                  <p x-show="item.selectedColor" class="text-sm text-gray-500">Color: <span x-text="item.selectedColor"></span></p>
+                  <p x-show="item.selectedSize" class="text-sm text-gray-500">Size: <span x-text="item.selectedSize"></span></p>
+                  <div class="flex items-center gap-2 mt-1">
+                    <button @click="updateQty(index, -1)" class="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center">-</button>
+                    <span x-text="item.qty" class="font-medium"></span>
+                    <button @click="updateQty(index, 1)" class="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center">+</button>
+                  </div>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="font-bold text-purple-600">$<span x-text="formatPrice(item.price * item.qty)"></span></p>
+                <button @click="removeFromCart(index)" class="text-sm text-red-400 hover:text-red-600 mt-1">Remove</button>
+              </div>
+            </div>
+          </template>
+          
+          <div class="pt-4 border-t mt-4">
+            <!-- Free Shipping Progress -->
+            <div x-show="!order.localPickup && cartSubtotal < freeShippingThreshold && cartSubtotal > 0" class="mb-4 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
+              <div class="text-center mb-2">
+                <span class="text-green-600 font-medium text-sm">🚚 Add $<span x-text="amountForFreeShipping.toFixed(2)"></span> more for FREE shipping!</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-gradient-to-r from-green-400 to-emerald-500 h-2 rounded-full transition-all" :style="`width: ${Math.min(100, (cartSubtotal / freeShippingThreshold) * 100)}%`"></div>
+              </div>
+            </div>
+            
+            <div x-show="!order.localPickup && cartSubtotal >= freeShippingThreshold" class="mb-4 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 text-center">
+              <span class="text-green-600 font-medium">🎉 You've earned FREE shipping!</span>
+            </div>
+            
+            <div class="flex justify-between text-gray-600 mb-2">
+              <span>Subtotal</span>
+              <span>$<span x-text="cartSubtotal.toFixed(2)"></span></span>
+            </div>
+            <!-- Applied Deal -->
+            <div x-show="appliedDeal" class="flex justify-between text-green-600 mb-2">
+              <span class="flex items-center gap-1">
+                <span>🏷️</span>
+                <span x-text="appliedDeal ? appliedDeal.name : ''"></span>
+              </span>
+              <span>-$<span x-text="discountAmount.toFixed(2)"></span></span>
+            </div>
+            <div class="flex justify-between text-gray-600 mb-2">
+              <span>Shipping</span>
+              <span x-text="order.localPickup ? 'FREE (Local Pickup)' : (shippingCost === 0 ? (cartSubtotal >= freeShippingThreshold ? 'FREE (Orders $' + freeShippingThreshold + '+)' : 'FREE') : '$' + shippingCost)"></span>
+            </div>
+            <div class="flex justify-between text-xl font-bold text-gray-800 pt-2 border-t">
+              <span>Total</span>
+              <span class="text-purple-600">$<span x-text="cartTotal.toFixed(2)"></span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Checkout Form -->
+        <div class="bg-white rounded-3xl shadow-xl p-6">
+          <h3 class="font-bold text-gray-800 mb-4 text-lg">👤 Your Information</h3>
+
+          <div class="space-y-3">
+            <div class="grid grid-cols-2 gap-3">
+              <input type="text" x-model="order.firstName" placeholder="First Name *" class="w-full px-4 py-3 rounded-xl border-2 border-purple-100 focus:border-purple-400 outline-none" required>
+              <input type="text" x-model="order.lastName" placeholder="Last Name *" class="w-full px-4 py-3 rounded-xl border-2 border-purple-100 focus:border-purple-400 outline-none" required>
+            </div>
+            <input type="email" x-model="order.email" placeholder="Email Address *" class="w-full px-4 py-3 rounded-xl border-2 border-purple-100 focus:border-purple-400 outline-none" required>
+            <textarea x-model="order.notes" placeholder="Special requests? (gift message, color preferences, etc.)" class="w-full px-4 py-3 rounded-xl border-2 border-purple-100 focus:border-purple-400 outline-none resize-none h-20"></textarea>
+
+            <div class="bg-purple-50 rounded-xl p-4">
+              <label class="flex items-center gap-3 cursor-pointer">
+                <input type="checkbox" x-model="order.localPickup" class="w-5 h-5 rounded text-purple-600">
+                <span class="text-gray-700">Local/Event pickup instead (free!)</span>
+              </label>
+              <p x-show="!order.localPickup" class="text-xs text-gray-500 mt-2 ml-8">Shipping address will be collected at checkout</p>
+            </div>
+          </div>
+          
+          <button @click="proceedToCheckout()" :disabled="!canSubmit || submitting" class="w-full mt-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-4 rounded-xl font-bold text-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+            <span x-show="!submitting">Proceed to Secure Checkout →</span>
+            <span x-show="submitting">Preparing checkout...</span>
+          </button>
+
+          <p class="text-xs text-gray-400 text-center mt-3 flex items-center justify-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+            Secure payment powered by Stripe
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Product Modal -->
+  <div x-show="showModal" x-transition.opacity class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" @click.self="closeProductModal()">
+    <div x-show="showModal" x-transition class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden" @click.stop>
+      <template x-if="selectedProduct">
+        <div x-data="{ currentImageIndex: 0 }">
+          <div class="relative h-48 bg-gradient-to-br from-purple-100 to-pink-100">
+            <img
+              :src="selectedProduct.images.length > 0 ? (typeof selectedProduct.images[currentImageIndex] === 'string' ? selectedProduct.images[currentImageIndex] : selectedProduct.images[currentImageIndex].url) : selectedProduct.image"
+              :alt="selectedProduct.name"
+              class="w-full h-full object-cover">
+            
+            <!-- Image Navigation -->
+            <template x-if="selectedProduct.images.length > 1">
+              <div>
+                <button 
+                  x-show="currentImageIndex > 0"
+                  @click="currentImageIndex--" 
+                  class="absolute left-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-white/80 rounded-full shadow flex items-center justify-center text-gray-700 hover:bg-white">
+                  ←
+                </button>
+                <button 
+                  x-show="currentImageIndex < selectedProduct.images.length - 1"
+                  @click="currentImageIndex++" 
+                  class="absolute right-10 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-white/80 rounded-full shadow flex items-center justify-center text-gray-700 hover:bg-white">
+                  →
+                </button>
+                
+                <!-- Image Dots -->
+                <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1">
+                  <template x-for="(img, index) in selectedProduct.images" :key="index">
+                    <button 
+                      @click="currentImageIndex = index"
+                      class="w-2 h-2 rounded-full transition-all"
+                      :class="index === currentImageIndex ? 'bg-white' : 'bg-white/50'">
+                    </button>
+                  </template>
+                </div>
+              </div>
+            </template>
+            
+            <button @click="closeProductModal()" class="absolute top-3 right-3 w-8 h-8 bg-white rounded-full shadow flex items-center justify-center text-gray-500 hover:text-gray-800">✕</button>
+          </div>
+          <div class="p-6">
+            <div class="flex items-start justify-between gap-2">
+              <h3 class="text-2xl font-bold text-gray-800" x-text="selectedProduct.name"></h3>
+              <span x-show="selectedProduct.sku" class="text-xs font-mono bg-gray-100 text-gray-500 px-2 py-1 rounded">SKU: <span x-text="selectedProduct.sku"></span></span>
+            </div>
+            <p class="text-gray-500 mt-2" x-text="selectedProduct.description"></p>
+            <p class="text-2xl font-bold text-purple-600 mt-4">$<span x-text="formatPrice(selectedProduct.price)"></span></p>
+            
+            <!-- Color Selection -->
+            <div x-show="selectedProduct.colors && selectedProduct.colors.length > 0" class="mt-4">
+              <p class="text-sm font-medium text-gray-700 mb-2">Choose Color:</p>
+              <div class="flex gap-2 flex-wrap">
+                <template x-for="color in selectedProduct.colors" :key="color">
+                  <button @click="modalSelection.color = color" class="px-3 py-1 rounded-full border-2 text-sm transition-all" :class="modalSelection.color === color ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-purple-200'" x-text="color"></button>
+                </template>
+              </div>
+            </div>
+            
+            <!-- Size Selection -->
+            <div x-show="selectedProduct.sizes && selectedProduct.sizes.length > 0" class="mt-4">
+              <p class="text-sm font-medium text-gray-700 mb-2">Choose Size:</p>
+              <div class="flex gap-2 flex-wrap">
+                <template x-for="size in selectedProduct.sizes" :key="size">
+                  <button @click="modalSelection.size = size" class="px-3 py-1 rounded-full border-2 text-sm transition-all" :class="modalSelection.size === size ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-purple-200'" x-text="size"></button>
+                </template>
+              </div>
+            </div>
+            
+            <button @click="addToCart()" class="w-full mt-6 bg-gradient-to-r from-green-400 to-emerald-500 text-white py-3 rounded-full font-bold text-lg hover:shadow-lg transition-all">
+              Add to Cart ✨
+            </button>
+
+            <!-- Share Button -->
+            <div class="mt-4 pt-4 border-t border-gray-100">
+              <p class="text-xs text-gray-400 text-center mb-2">Share this product</p>
+              <div class="flex justify-center gap-2">
+                <button @click="shareProduct('facebook')" class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition-colors" title="Share on Facebook">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5 5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z"/></svg>
+                </button>
+                <button @click="shareProduct('twitter')" class="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors" title="Share on X">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </button>
+                <button @click="shareProduct('email')" class="w-10 h-10 rounded-full bg-gray-600 text-white flex items-center justify-center hover:bg-gray-700 transition-colors" title="Share via Email">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                </button>
+                <button @click="shareProduct('copy')" class="w-10 h-10 rounded-full bg-purple-500 text-white flex items-center justify-center hover:bg-purple-600 transition-colors" title="Copy Link">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <!-- Contact Form Modal -->
+  <div x-show="showContactModal" x-transition.opacity.duration.300ms class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div @click.away="showContactModal = false" x-transition.scale.origin.center.duration.300ms class="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-auto">
+      <div class="p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-2xl font-bold text-gray-800">Contact Us</h3>
+          <button @click="showContactModal = false" class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:text-gray-800">✕</button>
+        </div>
+        
+        <div x-show="!contactSuccess">
+          <form @submit.prevent="submitContact()" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+              <input x-model="contact.name" type="text" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+              <input x-model="contact.email" type="email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500">
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Message</label>
+              <textarea x-model="contact.message" rows="4" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 resize-none"></textarea>
+            </div>
+            
+            <button type="submit" :disabled="!canSubmitContact || contactSubmitting" class="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-lg font-bold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+              <span x-show="!contactSubmitting">Send Message</span>
+              <span x-show="contactSubmitting">Sending...</span>
+            </button>
+          </form>
+        </div>
+        
+        <div x-show="contactSuccess" class="text-center">
+          <div class="text-6xl mb-4">✅</div>
+          <h4 class="text-xl font-bold text-gray-800 mb-2">Message Sent!</h4>
+          <p class="text-gray-600 mb-4">Thank you for contacting us. We'll get back to you soon!</p>
+          <button @click="showContactModal = false; contactSuccess = false; contact = {name: '', email: '', message: ''}" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-2 rounded-lg font-bold hover:shadow-lg transition-all">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Modal -->
+  <div x-show="showImageModal" x-transition.opacity.duration.300ms class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4 z-50">
+    <div @click.away="showImageModal = false" x-transition.scale.origin.center.duration.300ms class="relative max-w-4xl max-h-[90vh] w-full h-full flex items-center justify-center">
+      <img :src="selectedImageUrl" :alt="selectedImageAlt" class="max-w-full max-h-full object-contain rounded-lg shadow-2xl">
+      
+      <!-- Close Button -->
+      <button @click="showImageModal = false" class="absolute top-4 right-4 w-10 h-10 bg-white bg-opacity-20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-opacity-30 transition-all">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      
+      <!-- Previous Button -->
+      <button x-show="selectedProductImages.length > 1 && currentImageIndex > 0" @click="prevImage()" class="absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-black bg-opacity-60 rounded-full flex items-center justify-center text-white hover:bg-opacity-80 transition-all shadow-lg">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </button>
+
+      <!-- Next Button -->
+      <button x-show="selectedProductImages.length > 1 && currentImageIndex < selectedProductImages.length - 1" @click="nextImage()" class="absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 bg-black bg-opacity-60 rounded-full flex items-center justify-center text-white hover:bg-opacity-80 transition-all shadow-lg">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </button>
+      
+      <!-- Image Counter -->
+      <div x-show="selectedProductImages.length > 1" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white bg-opacity-20 backdrop-blur-sm rounded-full px-4 py-2 text-white text-sm">
+        <span x-text="currentImageIndex + 1"></span> / <span x-text="selectedProductImages.length"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Event Detail Modal -->
+  <div x-show="showEventModal" x-transition.opacity.duration.300ms class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div @click.away="showEventModal = false" x-transition.scale.origin.center.duration.300ms class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-auto">
+      <template x-if="selectedEvent">
+        <div>
+          <!-- Event Image -->
+          <div class="relative h-64 md:h-80 bg-gradient-to-br from-purple-100 to-pink-100">
+            <img x-show="selectedEvent.images && selectedEvent.images.length > 0"
+                 :src="typeof selectedEvent.images[0] === 'string' ? selectedEvent.images[0] : selectedEvent.images[0].url"
+                 :alt="selectedEvent.name"
+                 class="w-full h-full object-cover">
+            <div x-show="!selectedEvent.images || selectedEvent.images.length === 0" 
+                 class="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-500 to-pink-500">
+              <div class="text-center text-white">
+                <div class="text-6xl mb-2">📅</div>
+                <div class="text-lg font-semibold">Event</div>
+              </div>
+            </div>
+            <button @click="showEventModal = false" class="absolute top-4 right-4 w-10 h-10 bg-white bg-opacity-20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-opacity-30 transition-all">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+            <div x-show="selectedEvent.featured" class="absolute top-4 left-4 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-sm font-bold">
+              ⭐ Featured
+            </div>
+          </div>
+          
+          <div class="p-6">
+            <!-- Event Header -->
+            <div class="flex items-start justify-between mb-6">
+              <div class="flex-grow">
+                <h3 class="text-3xl font-bold text-gray-800 mb-2" x-text="selectedEvent.name"></h3>
+                <div class="flex items-center gap-2 text-gray-500 text-sm">
+                  <span x-show="selectedEvent.eventType" x-text="selectedEvent.eventType"></span>
+                  <span x-show="selectedEvent.eventType && selectedEvent.city && selectedEvent.state">•</span>
+                  <span x-show="selectedEvent.city && selectedEvent.state" x-text="selectedEvent.city + ', ' + selectedEvent.state"></span>
+                </div>
+              </div>
+              <div class="flex-shrink-0">
+                <div class="bg-gradient-to-br from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-center">
+                  <div class="font-bold text-lg" x-text="new Date(selectedEvent.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })"></div>
+                  <div class="text-xs opacity-90" x-text="new Date(selectedEvent.date).getFullYear()"></div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Event Description -->
+            <div x-show="selectedEvent.description" class="mb-6">
+              <p class="text-gray-600" x-text="selectedEvent.description"></p>
+            </div>
+            
+            <!-- Event Details -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div x-show="selectedEvent.startTime || selectedEvent.time" class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500">Time</p>
+                  <p class="font-medium text-gray-800">
+                    <span x-text="selectedEvent.startTime || selectedEvent.time"></span>
+                    <span x-show="selectedEvent.endTime"> - <span x-text="selectedEvent.endTime"></span></span>
+                  </p>
+                </div>
+              </div>
+              
+              <div x-show="selectedEvent.location" class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mt-0.5">
+                  <svg class="w-4 h-4 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500">Location</p>
+                  <p class="font-medium text-gray-800 whitespace-pre-line" x-text="selectedEvent.location"></p>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Special Items -->
+            <div x-show="selectedEvent.specialItems" class="mb-6 p-4 bg-purple-50 rounded-lg border-l-4 border-purple-400">
+              <div class="flex items-center gap-2 mb-2">
+                <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                </svg>
+                <span class="font-bold text-purple-800">Special Items</span>
+              </div>
+              <p class="text-purple-700" x-text="selectedEvent.specialItems"></p>
+            </div>
+            
+            <!-- Notes -->
+            <div x-show="selectedEvent.notes" class="mb-6">
+              <h4 class="font-bold text-gray-800 mb-2">Notes</h4>
+              <p class="text-gray-600" x-text="selectedEvent.notes"></p>
+            </div>
+            
+            <!-- Footer Actions -->
+            <div class="flex flex-col sm:flex-row gap-3 justify-between items-center pt-4 border-t">
+              <div class="flex items-center gap-2">
+                <span class="inline-block px-3 py-1 rounded-full text-sm font-medium" 
+                      :class="selectedEvent.status === 'Upcoming' ? 'bg-green-100 text-green-800' : 
+                             selectedEvent.status === 'Completed' ? 'bg-gray-100 text-gray-600' : 
+                             'bg-red-100 text-red-800'" 
+                      x-text="selectedEvent.status">
+                </span>
+              </div>
+              <div class="flex gap-3">
+                <button x-show="selectedEvent.website" @click="window.open(selectedEvent.website, '_blank')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                  Event Info
+                </button>
+                <button @click="showEventModal = false" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <!-- Cache Refresh Modal -->
+  <div x-show="showCacheRefreshModal" x-transition.opacity.duration.300ms class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div x-transition.scale.origin.center.duration.300ms class="bg-white rounded-2xl max-w-md w-full overflow-hidden shadow-2xl">
+      <div class="bg-gradient-to-r from-purple-600 to-pink-500 px-6 py-4">
+        <h3 class="text-xl font-bold text-white flex items-center gap-2">
+          <svg class="w-6 h-6 animate-spin" x-show="!cacheRefreshStatus.includes('complete') && !cacheRefreshStatus.includes('errors')" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <svg class="w-6 h-6" x-show="cacheRefreshStatus.includes('complete')" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <svg class="w-6 h-6" x-show="cacheRefreshStatus.includes('errors')" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+          </svg>
+          Refreshing Cache
+        </h3>
+        <p class="text-purple-100 text-sm mt-1" x-text="cacheRefreshStatus"></p>
+      </div>
+
+      <div class="p-6">
+        <div class="bg-gray-900 rounded-lg p-4 font-mono text-sm max-h-64 overflow-y-auto">
+          <template x-for="(log, index) in cacheRefreshLogs" :key="index">
+            <div class="text-gray-300 py-0.5" x-text="log"></div>
+          </template>
+          <div x-show="cacheRefreshLogs.length === 0" class="text-gray-500">Waiting for logs...</div>
+        </div>
+
+        <div class="mt-4 flex justify-end">
+          <button
+            @click="showCacheRefreshModal = false"
+            x-show="cacheRefreshStatus.includes('complete') || cacheRefreshStatus.includes('errors')"
+            class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="mt-16 py-8 text-center text-gray-500 text-sm border-t border-gray-200">
+<!-- TODO: Update footer text -->
+    <p class="font-medium">Made with care by Your Shop Name</p>
+    <p class="mt-1">© 2025 Your Shop Name • Your tagline here</p>
+    <p class="mt-2 text-xs">🖨️ Printed at home with care • 📦 Ships anywhere!</p>
+
+    <!-- Social Share Section -->
+    <div class="mt-6 pt-4 border-t border-gray-100">
+<!-- TODO: Update social share URLs with your domain -->
+      <p class="text-xs text-gray-400 mb-3">Share with friends!</p>
+      <div class="flex justify-center gap-3">
+        <a href="https://www.facebook.com/sharer/sharer.php?u=https://your-domain.com&quote=Check%20out%20this%20shop!"
+           target="_blank"
+           class="w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition-colors"
+           title="Share on Facebook">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5 5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z"/></svg>
+        </a>
+        <a href="https://twitter.com/intent/tweet?text=Check%20out%20this%20shop!&url=https://your-domain.com"
+           target="_blank"
+           class="w-9 h-9 rounded-full bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors"
+           title="Share on X">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href="https://pinterest.com/pin/create/button/?url=https://your-domain.com&description=Check%20out%20this%20shop!"
+           target="_blank"
+           class="w-9 h-9 rounded-full bg-red-600 text-white flex items-center justify-center hover:bg-red-700 transition-colors"
+           title="Share on Pinterest">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/></svg>
+        </a>
+        <a href="mailto:?subject=Check%20out%20this%20shop!&body=I%20found%20this%20amazing%20shop!%0A%0Ahttps://your-domain.com"
+           class="w-9 h-9 rounded-full bg-gray-600 text-white flex items-center justify-center hover:bg-gray-700 transition-colors"
+           title="Share via Email">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+function shop() {
+  return {
+    // State
+    page: 'home',
+    loading: true,
+    products: [],
+    allProducts: [],
+    events: [],
+    loadingEvents: false,
+    eventFilter: 'upcoming',
+    deals: [],
+    loadingDeals: false,
+    cart: [],
+    availableTags: [],
+    selectedTags: [],
+    selectedColors: [],
+    madeByMeFilter: false,
+    searchQuery: '',
+    filteredProducts: [],
+    currentDisplayIndex: 0,
+    pageSize: 20,
+    hasMoreProducts: true,
+    loadingMore: false,
+    showModal: false,
+    selectedProduct: null,
+    modalSelection: { color: null, size: null },
+    showContactModal: false,
+    contactSubmitting: false,
+    contactSuccess: false,
+    showImageModal: false,
+    selectedImageUrl: '',
+    selectedImageAlt: '',
+    selectedProductImages: [],
+    currentImageIndex: 0,
+    showEventModal: false,
+    selectedEvent: null,
+    showMobileMenu: false,
+    showCacheRefreshModal: false,
+    cacheRefreshStatus: '',
+    cacheRefreshLogs: [],
+    paymentSuccess: false,
+    paymentCancelled: false,
+    pendingOrderId: null,
+    submitting: false,
+    searchQuery: '',
+
+    // Config - loaded from config.js
+    API_BASE_URL: CONFIG.API_BASE_URL,
+    SHIPPING_FLAT_RATE: CONFIG.SHIPPING_FLAT_RATE,
+    FREE_SHIPPING_THRESHOLD: CONFIG.FREE_SHIPPING_THRESHOLD,
+    
+    // Order form
+    order: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      notes: '',
+      localPickup: false
+    },
+    
+    // Contact form
+    contact: {
+      name: '',
+      email: '',
+      message: ''
+    },
+    
+    // Computed
+    get filteredEvents() {
+      const now = new Date();
+      now.setHours(0, 0, 0, 0); // Start of today
+      
+      return this.events.filter(event => {
+        if (this.eventFilter === 'upcoming') {
+          return new Date(event.date) >= now && event.status === 'Upcoming';
+        } else if (this.eventFilter === 'past') {
+          return new Date(event.date) < now || event.status === 'Completed';
+        }
+        return true; // 'all'
+      }).sort((a, b) => {
+        // Sort upcoming events by date ascending, past events by date descending
+        if (this.eventFilter === 'upcoming') {
+          return new Date(a.date) - new Date(b.date);
+        } else {
+          return new Date(b.date) - new Date(a.date);
+        }
+      });
+    },
+    get cartCount() {
+      return this.cart.reduce((sum, item) => sum + item.qty, 0);
+    },
+    get cartSubtotal() {
+      return this.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    },
+    get shippingCost() {
+      if (this.order.localPickup || this.cart.length === 0) return 0;
+      if (this.cartSubtotal >= this.FREE_SHIPPING_THRESHOLD) return 0;
+      return this.SHIPPING_FLAT_RATE;
+    },
+    get freeShippingThreshold() {
+      return this.FREE_SHIPPING_THRESHOLD;
+    },
+    get amountForFreeShipping() {
+      return Math.max(0, this.freeShippingThreshold - this.cartSubtotal);
+    },
+    get appliedDeal() {
+      // Find all deals that qualify (subtotal >= minAmount)
+      const qualifyingDeals = this.deals.filter(deal => this.cartSubtotal >= deal.minAmount);
+      if (qualifyingDeals.length === 0) return null;
+
+      // Calculate effective discount for each and pick the best one
+      let bestDeal = null;
+      let bestDiscount = 0;
+
+      for (const deal of qualifyingDeals) {
+        let discount;
+        if (deal.discountType === 'Percentage') {
+          discount = this.cartSubtotal * (deal.discountValue / 100);
+        } else {
+          discount = deal.discountValue;
+        }
+        if (discount > bestDiscount) {
+          bestDiscount = discount;
+          bestDeal = deal;
+        }
+      }
+      return bestDeal;
+    },
+    get discountAmount() {
+      if (!this.appliedDeal) return 0;
+      if (this.appliedDeal.discountType === 'Percentage') {
+        return this.cartSubtotal * (this.appliedDeal.discountValue / 100);
+      }
+      return this.appliedDeal.discountValue;
+    },
+    get cartTotal() {
+      return Math.max(0, this.cartSubtotal - this.discountAmount) + this.shippingCost;
+    },
+    get canSubmit() {
+      return this.order.firstName && this.order.lastName && this.order.email && this.cart.length > 0;
+    },
+    get canSubmitContact() {
+      return this.contact.name && this.contact.email && this.contact.message;
+    },
+    
+    // Format price display: show .50 for half dollars, but $3 not $3.00
+    formatPrice(price) {
+      if (price % 1 === 0) return price.toString(); // Whole dollars: $3
+      return price.toFixed(2); // Decimals: $0.50, $3.25
+    },
+    
+    // Methods
+    async init() {
+      // Check for payment status URL parameters
+      this.handlePaymentReturn();
+
+      // Check for cache refresh URL parameters
+      this.handleCacheRefresh();
+
+      await this.fetchProducts();
+      await this.fetchEvents();
+      await this.fetchDeals();
+      this.loadCart();
+      this.setupInfiniteScroll();
+
+      // Handle deep linking (e.g., #product/SKU)
+      this.handleDeepLink();
+
+      // Listen for hash changes (back/forward navigation)
+      window.addEventListener('hashchange', () => this.handleDeepLink());
+    },
+
+    // Handle return from Stripe payment
+    handlePaymentReturn() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const payment = urlParams.get('payment');
+      const orderId = urlParams.get('order');
+
+      if (payment === 'success') {
+        this.paymentSuccess = true;
+        this.page = 'cart';
+        // Clear cart after successful payment
+        this.cart = [];
+        this.saveCart();
+        // Clean up URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } else if (payment === 'cancelled' && orderId) {
+        this.paymentCancelled = true;
+        this.pendingOrderId = orderId;
+        this.page = 'cart';
+        // Clean up URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    },
+    
+    // Handle cache refresh from URL parameters
+    handleCacheRefresh() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const refresh = urlParams.get('refresh');
+      const table = urlParams.get('table');
+      const key = urlParams.get('key');
+      
+      if (refresh === 'true' && key) {
+        // Show notification that cache refresh is happening
+        console.log('Cache refresh requested for:', table || 'all tables');
+        this.refreshCache(table, key);
+        
+        // Clean up URL without the refresh parameters
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, document.title, newUrl);
+      } else if (refresh === 'true' && !key) {
+        console.warn('Cache refresh requires admin key');
+      }
+    },
+    
+    // Refresh cache for specific tables or all
+    async refreshCache(table, adminKey) {
+      if (!adminKey) {
+        console.warn('Admin key required for cache refresh');
+        return;
+      }
+
+      // Show loading modal
+      this.showCacheRefreshModal = true;
+      this.cacheRefreshStatus = 'Starting cache refresh...';
+      this.cacheRefreshLogs = [];
+
+      const tables = [];
+      if (!table || table === 'all') {
+        tables.push({ name: 'products', url: `${this.API_BASE_URL}/products?refresh=true&key=${adminKey}` });
+        tables.push({ name: 'events', url: `${this.API_BASE_URL}/events?refresh=true&key=${adminKey}` });
+        tables.push({ name: 'deals', url: `${this.API_BASE_URL}/deals?refresh=true&key=${adminKey}` });
+      } else {
+        tables.push({ name: table.toLowerCase(), url: `${this.API_BASE_URL}/${table.toLowerCase()}?refresh=true&key=${adminKey}` });
+      }
+
+      let hasError = false;
+
+      for (const t of tables) {
+        // Add a pending entry for this table
+        const logIndex = this.cacheRefreshLogs.length;
+        this.cacheRefreshLogs.push(`⏳ ${t.name}: Refreshing...`);
+
+        try {
+          this.cacheRefreshStatus = `Refreshing ${t.name}...`;
+
+          const response = await fetch(t.url);
+
+          if (response.ok) {
+            const data = await response.json();
+            const syncStats = data.sync_stats;
+
+            if (syncStats) {
+              // Update the pending entry to success
+              this.cacheRefreshLogs[logIndex] = `✅ ${t.name}: ${syncStats.products_with_sku} products synced`;
+              if (syncStats.images_uploaded > 0) {
+                this.cacheRefreshLogs.push(`   📤 Uploaded ${syncStats.images_uploaded} images`);
+              }
+              if (syncStats.images_deleted > 0) {
+                this.cacheRefreshLogs.push(`   🗑️ Deleted ${syncStats.images_deleted} images`);
+              }
+              if (syncStats.images_skipped > 0) {
+                this.cacheRefreshLogs.push(`   ⏭️ Skipped ${syncStats.images_skipped} (already in R2)`);
+              }
+            } else {
+              // Update the pending entry to success
+              this.cacheRefreshLogs[logIndex] = `✅ ${t.name}: Refreshed (${data.total_count || 0} records)`;
+            }
+          } else {
+            throw new Error(`HTTP ${response.status}`);
+          }
+        } catch (error) {
+          console.error(`Cache refresh failed for ${t.name}:`, error);
+          // Update the pending entry to error
+          this.cacheRefreshLogs[logIndex] = `❌ ${t.name}: Failed - ${error.message}`;
+          hasError = true;
+        }
+      }
+
+      // Update final status
+      this.cacheRefreshStatus = hasError ? 'Completed with errors' : 'Cache refresh complete!';
+      this.cacheRefreshLogs.push('');
+      this.cacheRefreshLogs.push(hasError ? '⚠️ Some refreshes failed' : '🎉 All done!');
+
+      // Reload data to reflect changes
+      if (!hasError) {
+        if (!table || table === 'all' || table === 'products') {
+          await this.fetchProducts(true);
+        }
+        if (!table || table === 'all' || table === 'events') {
+          await this.fetchEvents(true);
+        }
+        if (!table || table === 'all' || table === 'deals') {
+          await this.fetchDeals(true);
+        }
+      }
+    },
+    
+    // Show cache refresh notification
+    showCacheRefreshNotification(table, isError = false) {
+      const message = isError 
+        ? `Failed to refresh cache for ${table}` 
+        : `Cache refreshed successfully for ${table}`;
+        
+      // Create a simple notification
+      const notification = document.createElement('div');
+      notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-medium ${
+        isError ? 'bg-red-500' : 'bg-green-500'
+      }`;
+      notification.textContent = message;
+      
+      document.body.appendChild(notification);
+      
+      // Auto remove after 3 seconds
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
+        }
+      }, 3000);
+    },
+    
+    extractAvailableTags() {
+      const allTags = new Set();
+      this.allProducts.forEach(product => {
+        if (product.tags) {
+          product.tags.forEach(tag => allTags.add(tag));
+        }
+      });
+      this.availableTags = Array.from(allTags).sort();
+    },
+    
+    setupInfiniteScroll() {
+      const handleScroll = () => {
+        if (this.loadingMore || !this.hasMoreProducts || this.page !== 'home') return;
+        
+        // Support both document.documentElement and document.body for better mobile compatibility
+        const scrollElement = document.documentElement.scrollHeight > document.body.scrollHeight 
+          ? document.documentElement 
+          : document.body;
+          
+        const scrollHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+        const scrollTop = Math.max(document.documentElement.scrollTop, document.body.scrollTop, window.pageYOffset);
+        const clientHeight = Math.min(document.documentElement.clientHeight, window.innerHeight);
+        
+        // Trigger load when within 300px of bottom
+        if (scrollTop + clientHeight >= scrollHeight - 300) {
+          this.loadMoreProducts();
+        }
+      };
+      
+      // Use passive listener for better performance on mobile
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      
+      // Also listen to touchmove for iOS
+      window.addEventListener('touchmove', handleScroll, { passive: true });
+    },
+    
+
+    async performSearch() {
+      this.applyFiltersAndSearch();
+    },
+
+    clearSearch() {
+      this.searchQuery = '';
+      this.applyFiltersAndSearch();
+    },
+
+    async fetchProducts(bustCache = false) {
+      this.loading = true;
+
+      try {
+        // Fetch all products from worker cache (no pagination needed)
+        let url = `${this.API_BASE_URL}/products`;
+        if (bustCache) {
+          url += `?_bust=${Date.now()}`;
+        }
+        
+        const response = await fetch(url, {
+          headers: bustCache ? { 'Cache-Control': 'no-cache' } : {}
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch products from API');
+        }
+        
+        const data = await response.json();
+        
+        // Store all products in memory for client-side filtering and pagination
+        this.allProducts = data.records;
+        this.extractAvailableTags();
+        
+        // Apply current filters and search
+        this.applyFiltersAndSearch();
+        
+      } catch (error) {
+        console.error('Failed to fetch products:', error);
+        // Fallback to demo products if API fails
+        this.allProducts = [
+          { id: '1', name: 'Rainbow Dragon', price: 12, image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400&h=400&fit=crop', images: [], description: 'A magical dragon with beautiful scales. Perfect for your desk!', madeByMe: true, colors: ['Rainbow', 'Purple', 'Blue', 'Green'], tags: ['Dragons', 'Fantasy'], pinned: true },
+          { id: '2', name: 'Cute Bunny', price: 8, image: 'https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=400&h=400&fit=crop', images: [], description: 'Adorable bunny friend. Makes a great gift!', madeByMe: true, colors: ['White', 'Pink', 'Gray'], tags: ['Animals', 'Cute'], pinned: false },
+          { id: '3', name: 'Space Rocket', price: 15, image: 'https://images.unsplash.com/photo-1457364559154-aa2644600ebb?w=400&h=400&fit=crop', images: [], description: 'Blast off to adventure! Detailed rocket ship.', madeByMe: false, colors: ['Red', 'Blue', 'Silver'], sizes: ['Small', 'Large'], tags: ['Space', 'Vehicles'], pinned: false },
+          { id: '4', name: 'Unicorn', price: 14, image: 'https://images.unsplash.com/photo-1509335035496-c47fc836517f?w=400&h=400&fit=crop', images: [], description: 'Magical unicorn with sparkle finish option.', madeByMe: true, colors: ['White', 'Pink', 'Rainbow'], tags: ['Fantasy', 'Cute'], pinned: false },
+          { id: '5', name: 'Dinosaur Collection', price: 10, image: 'https://images.unsplash.com/photo-1519066629447-267fffa62d4b?w=400&h=400&fit=crop', images: [], description: 'Friendly T-Rex for dino lovers!', madeByMe: false, colors: ['Green', 'Brown', 'Blue'], tags: ['Animals', 'Dinosaurs'], pinned: false },
+          { id: '6', name: 'Star Keychain', price: 5, image: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=400&h=400&fit=crop', images: [], description: 'Cute keychain for your backpack or keys.', madeByMe: true, colors: ['Gold', 'Silver', 'Pink', 'Blue'], tags: ['Accessories', 'Small'], pinned: false },
+        ];
+        this.extractAvailableTags();
+        this.applyFiltersAndSearch();
+      } finally {
+        this.loading = false;
+      }
+    },
+    
+    // Client-side filtering and search with infinite scroll
+    applyFiltersAndSearch() {
+      let filtered = this.allProducts;
+      
+      // Apply search filter
+      if (this.searchQuery.trim()) {
+        const query = this.searchQuery.toLowerCase().trim();
+        filtered = filtered.filter(product => 
+          product.name.toLowerCase().includes(query) ||
+          product.description.toLowerCase().includes(query) ||
+          product.tags.some(tag => tag.toLowerCase().includes(query)) ||
+          product.colors.some(color => color.toLowerCase().includes(query))
+        );
+      }
+      
+      // Apply "Made By Me" filter
+      if (this.madeByMeFilter) {
+        filtered = filtered.filter(product => product.madeByMe === true);
+      }
+      
+      // Apply tag filter
+      if (this.selectedTags.length > 0) {
+        filtered = filtered.filter(product =>
+          this.selectedTags.every(selectedTag =>
+            product.tags.some(productTag => productTag === selectedTag)
+          )
+        );
+      }
+      
+      // Apply color filter
+      if (this.selectedColors.length > 0) {
+        filtered = filtered.filter(product =>
+          this.selectedColors.every(selectedColor =>
+            product.colors.some(productColor => productColor === selectedColor)
+          )
+        );
+      }
+      
+      // Reset pagination and show first page
+      this.filteredProducts = filtered;
+      this.currentDisplayIndex = 0;
+      this.loadMoreProducts();
+    },
+    
+    // Load more products for infinite scroll
+    loadMoreProducts() {
+      const endIndex = Math.min(
+        this.currentDisplayIndex + this.pageSize,
+        this.filteredProducts.length
+      );
+      
+      if (this.currentDisplayIndex === 0) {
+        this.products = this.filteredProducts.slice(0, endIndex);
+      } else {
+        this.products = [
+          ...this.products,
+          ...this.filteredProducts.slice(this.currentDisplayIndex, endIndex)
+        ];
+      }
+      
+      this.currentDisplayIndex = endIndex;
+      this.hasMoreProducts = endIndex < this.filteredProducts.length;
+      this.loadingMore = false;
+    },
+    
+    // Filter management methods
+    clearAllFilters() {
+      this.selectedTags = [];
+      this.selectedColors = [];
+      this.madeByMeFilter = false;
+      this.applyFiltersAndSearch();
+    },
+    
+    toggleMadeByMeFilter() {
+      this.madeByMeFilter = !this.madeByMeFilter;
+      this.applyFiltersAndSearch();
+    },
+    
+    toggleTagFilter(tag) {
+      const index = this.selectedTags.indexOf(tag);
+      if (index > -1) {
+        this.selectedTags.splice(index, 1);
+      } else {
+        this.selectedTags.push(tag);
+      }
+      this.applyFiltersAndSearch();
+    },
+    
+    async fetchEvents(bustCache = false) {
+      this.loadingEvents = true;
+      
+      try {
+        let url = `${this.API_BASE_URL}/events`;
+        if (bustCache) {
+          url += `?_bust=${Date.now()}`;
+        }
+        
+        const response = await fetch(url, {
+          headers: bustCache ? { 'Cache-Control': 'no-cache' } : {}
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch events from API');
+        }
+        
+        const data = await response.json();
+        this.events = data.records;
+        
+      } catch (error) {
+        console.error('Failed to fetch events:', error);
+        // Fallback to demo events if Airtable fails
+        this.events = [
+          {
+            id: '1',
+            name: 'Downtown Farmers Market',
+            date: '2024-12-29',
+            startTime: '9:00 AM',
+            endTime: '2:00 PM',
+            location: 'Main Street Park, 123 Main St',
+            city: 'Anytown',
+            state: 'CA',
+            eventType: 'Market',
+            description: 'Come visit my booth at the weekly farmers market! I\'ll have all my latest prints plus some market-exclusive designs.',
+            website: 'https://downtownfarmersmarket.com',
+            status: 'Upcoming',
+            featured: true,
+            images: [],
+            specialItems: 'Market-exclusive mini keychains!',
+            notes: ''
+          },
+          {
+            id: '2', 
+            name: 'Spring Craft Fair',
+            date: '2024-12-15',
+            startTime: '10:00 AM',
+            endTime: '4:00 PM',
+            location: 'Community Center, 456 Oak Ave',
+            city: 'Anytown',
+            state: 'CA',
+            eventType: 'Fair',
+            description: 'Had an amazing time at the spring craft fair! Thanks to everyone who stopped by.',
+            website: '',
+            status: 'Completed',
+            featured: false,
+            images: [],
+            specialItems: '',
+            notes: ''
+          }
+        ];
+      } finally {
+        this.loadingEvents = false;
+      }
+    },
+
+    async fetchDeals(bustCache = false) {
+      this.loadingDeals = true;
+
+      try {
+        let url = `${this.API_BASE_URL}/deals`;
+        if (bustCache) {
+          url += `?_bust=${Date.now()}`;
+        }
+        
+        const response = await fetch(url, {
+          headers: bustCache ? { 'Cache-Control': 'no-cache' } : {}
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch deals from API');
+        }
+
+        const data = await response.json();
+        this.deals = data.records;
+
+      } catch (error) {
+        console.error('Failed to fetch deals:', error);
+        // Fallback to empty deals if API fails
+        this.deals = [];
+      } finally {
+        this.loadingDeals = false;
+      }
+    },
+
+    openProductModal(product) {
+      this.selectedProduct = product;
+      this.modalSelection = {
+        color: product.colors?.[0] || null,
+        size: product.sizes?.[0] || null
+      };
+      this.showModal = true;
+      // Update URL hash for deep linking (without triggering navigation)
+      if (product.sku) {
+        history.replaceState(null, '', `#product/${product.sku}`);
+      }
+    },
+
+    // Close modal and clear hash
+    closeProductModal() {
+      this.showModal = false;
+      this.selectedProduct = null;
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    },
+
+    // Share product on social media or via email
+    shareProduct(platform) {
+      if (!this.selectedProduct) return;
+
+      const product = this.selectedProduct;
+      const sku = product.sku || product.id;
+      // TODO: Update with your domain
+      const productUrl = `https://your-domain.com/#product/${sku}`;
+      const productName = product.name;
+      const productPrice = `$${this.formatPrice(product.price)}`;
+      const shareText = `Check out ${productName} (${productPrice}) from Your Shop Name!`;
+
+      switch (platform) {
+        case 'facebook':
+          window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(productUrl)}&quote=${encodeURIComponent(shareText)}`, '_blank', 'width=600,height=400');
+          break;
+        case 'twitter':
+          window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(productUrl)}`, '_blank', 'width=600,height=400');
+          break;
+        case 'email':
+          const emailSubject = `Check out this cool 3D print: ${productName}`;
+          const emailBody = `${shareText}\n\n${productUrl}`;
+          window.location.href = `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+          break;
+        case 'copy':
+          navigator.clipboard.writeText(productUrl).then(() => {
+            // Show a brief toast notification
+            this.showToast('Link copied to clipboard!');
+          }).catch(() => {
+            // Fallback for older browsers
+            prompt('Copy this link:', productUrl);
+          });
+          break;
+      }
+    },
+
+    // Show toast notification
+    showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-6 py-3 rounded-full shadow-lg z-[100] transition-opacity';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 2000);
+    },
+
+    // Handle deep linking - open product from URL hash
+    handleDeepLink() {
+      const hash = window.location.hash;
+      if (hash.startsWith('#product/')) {
+        const sku = hash.replace('#product/', '');
+        // Wait for products to load, then open the modal
+        const checkProducts = () => {
+          if (this.products.length > 0) {
+            const product = this.products.find(p => p.sku === sku || p.id === sku);
+            if (product) {
+              this.openProductModal(product);
+            }
+          } else if (!this.loading) {
+            // Products loaded but not found - do nothing
+          } else {
+            // Still loading, check again
+            setTimeout(checkProducts, 100);
+          }
+        };
+        checkProducts();
+      }
+    },
+    
+    openImageModal(product) {
+      // Extract URLs from images array (handles both string URLs and attachment objects)
+      this.selectedProductImages = product.images && product.images.length > 0
+        ? product.images.map(img => typeof img === 'string' ? img : img.url)
+        : [product.image];
+      this.currentImageIndex = 0;
+      this.selectedImageUrl = this.selectedProductImages[0];
+      this.selectedImageAlt = product.name;
+      this.showImageModal = true;
+    },
+    
+    openEventModal(event) {
+      this.selectedEvent = event;
+      this.showEventModal = true;
+    },
+    
+    nextImage() {
+      if (this.currentImageIndex < this.selectedProductImages.length - 1) {
+        this.currentImageIndex++;
+        this.selectedImageUrl = this.selectedProductImages[this.currentImageIndex];
+      }
+    },
+    
+    prevImage() {
+      if (this.currentImageIndex > 0) {
+        this.currentImageIndex--;
+        this.selectedImageUrl = this.selectedProductImages[this.currentImageIndex];
+      }
+    },
+    
+    addToCart() {
+      const item = {
+        ...this.selectedProduct,
+        selectedColor: this.modalSelection.color,
+        selectedSize: this.modalSelection.size,
+        qty: 1
+      };
+      
+      // Check if same item with same options exists
+      const existingIndex = this.cart.findIndex(c => 
+        c.id === item.id && c.selectedColor === item.selectedColor && c.selectedSize === item.selectedSize
+      );
+      
+      if (existingIndex >= 0) {
+        this.cart[existingIndex].qty++;
+      } else {
+        this.cart.push(item);
+      }
+      
+      this.saveCart();
+      this.showModal = false;
+    },
+    
+    updateQty(index, delta) {
+      this.cart[index].qty += delta;
+      if (this.cart[index].qty <= 0) {
+        this.cart.splice(index, 1);
+      }
+      this.saveCart();
+    },
+    
+    removeFromCart(index) {
+      this.cart.splice(index, 1);
+      this.saveCart();
+    },
+    
+    saveCart() {
+      localStorage.setItem('dreamshop_cart', JSON.stringify(this.cart));
+    },
+    
+    loadCart() {
+      const saved = localStorage.getItem('dreamshop_cart');
+      if (saved) this.cart = JSON.parse(saved);
+    },
+    
+    async proceedToCheckout() {
+      if (!this.canSubmit || this.submitting) return;
+      this.submitting = true;
+
+      try {
+        const checkoutData = {
+          cart: this.cart,
+          customer: {
+            firstName: this.order.firstName,
+            lastName: this.order.lastName,
+            email: this.order.email,
+            address: this.order.address,
+            city: this.order.city,
+            state: this.order.state,
+            zip: this.order.zip,
+            country: this.order.country,
+            notes: this.order.notes,
+            localPickup: this.order.localPickup
+          },
+          shipping: this.shippingCost,
+          discount: this.appliedDeal ? {
+            name: this.appliedDeal.name,
+            amount: this.discountAmount
+          } : null,
+          totals: {
+            subtotal: this.cartSubtotal,
+            shipping: this.shippingCost,
+            discount: this.discountAmount,
+            total: this.cartTotal
+          }
+        };
+
+        const response = await fetch(`${this.API_BASE_URL}/create-checkout`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(checkoutData)
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to create checkout');
+        }
+
+        const result = await response.json();
+
+        if (result.checkoutUrl) {
+          // Store order ID for potential retry
+          this.pendingOrderId = result.orderId;
+          // Redirect to Stripe Checkout
+          window.location.href = result.checkoutUrl;
+        } else {
+          throw new Error('No checkout URL received');
+        }
+
+      } catch (error) {
+        console.error('Checkout error:', error);
+        alert('Something went wrong creating checkout. Please try again!');
+        this.submitting = false;
+      }
+    },
+
+    async retryPayment() {
+      // For cancelled payments, we could create a new checkout session
+      // For now, just reset and let user try again
+      this.paymentCancelled = false;
+      this.pendingOrderId = null;
+      // User will need to submit again to create a new order
+    },
+    
+    async submitContact() {
+      if (!this.canSubmitContact || this.contactSubmitting) return;
+      this.contactSubmitting = true;
+      
+      try {
+        const contactData = {
+          fields: {
+            'Name': this.contact.name,
+            'Email': this.contact.email,
+            'Message': this.contact.message,
+            'Created': new Date().toISOString()
+          }
+        };
+        
+        const response = await fetch(
+          `${this.API_BASE_URL}/submit-contact`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(contactData)
+          }
+        );
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Failed to submit contact: ${errorText}`);
+        }
+        
+        this.contactSuccess = true;
+        
+      } catch (error) {
+        console.error('Failed to submit contact:', error);
+        alert('Something went wrong. Please try again!');
+      } finally {
+        this.contactSubmitting = false;
+      }
+    }
+  };
+}
+</script>
+
+<script src="config.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+</body>
+</html>
+

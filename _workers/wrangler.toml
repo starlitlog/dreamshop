@@ -1,0 +1,36 @@
+# Cloudflare Workers configuration for DreamShop API
+# Update the values below for your shop
+
+name = "dreamshop-api"
+main = "worker.js"
+compatibility_date = "2024-12-01"
+
+# Environment variables (set via wrangler secret put)
+# Run these commands to set your secrets:
+#   wrangler secret put AIRTABLE_API_KEY
+#   wrangler secret put AIRTABLE_BASE_ID
+#   wrangler secret put AIRTABLE_API_KEY_WEB_RESOURCE
+#   wrangler secret put AIRTABLE_BASE_ID_WEB_RESOURCE
+#   wrangler secret put STRIPE_SECRET_KEY
+#   wrangler secret put STRIPE_WEBHOOK_SECRET
+#   wrangler secret put ADMIN_REFRESH_KEY
+
+# R2 bucket binding for image storage
+# First create the bucket: wrangler r2 bucket create your-bucket-name
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "your-bucket-name"
+
+# Custom domain route
+# Update these to match your domain
+[[routes]]
+pattern = "api.your-domain.com"
+zone_name = "your-domain.com"
+custom_domain = true
+
+# Optional: separate environments
+[env.production]
+name = "dreamshop-api-prod"
+
+[env.development]
+name = "dreamshop-api-dev"
