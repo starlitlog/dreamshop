@@ -1,21 +1,21 @@
 # DreamShop: Running Costs & Scaling Guide
 
-**Run a $100K+/month e-commerce business for $0.**
+**Handle 500K monthly visitors for $5. Enterprise platforms charge $2,300+/month for the same traffic.**
 
-DreamShop's architecture leverages Cloudflare's edge caching and generous free tiers to deliver enterprise-grade performance at a fraction of the cost of traditional platforms—or completely free.
+DreamShop's architecture leverages Cloudflare's edge caching and generous free tiers to deliver enterprise-grade performance at a fraction of the cost—or completely free.
 
 ---
 
 ## Quick Summary
 
-| Tier | Monthly Cost | Products | MAU | CCU | Revenue Potential |
+| Tier | Monthly Cost | Products | MAU | CCU | Revenue Potential* |
 |------|-------------|----------|-----|-----|-------------------|
-| **Free** | $0 | 1,000 | ~100K-150K | ~3K-5K | $100K+/month |
-| **Starter** | $5 | 1,000 | ~200K-500K | ~10K-15K | $500K+/month |
-| **Growth** | $25 | 50,000 | ~200K-500K | ~10K-15K | $500K+/month |
+| **Free** | $0 | 1,000 | ~100K-150K | ~3K-5K | $10K-50K/month |
+| **Starter** | $5 | 1,000 | ~200K-500K | ~10K-15K | $20K-250K/month |
+| **Growth** | $25 | 50,000 | ~200K-500K | ~10K-15K | $20K-250K/month |
 | **Scale** | $50+ | Unlimited | 1M+ | 50K+ | Unlimited |
 
-> **The math**: At 1% conversion and $10 average order, 100K MAU = $100K/month revenue. At zero platform cost.
+*Revenue potential at 1-5% conversion, $10-50 average order value
 
 ---
 
@@ -51,7 +51,7 @@ DreamShop's 24-hour caching strategy means Airtable's 1,000 API calls/month limi
 With the free tier alone, you can run a store that:
 - Handles **100,000+ monthly visitors**
 - Supports **3,000-5,000 concurrent shoppers**
-- Generates **$100K+ monthly revenue** (at 1% conversion, $10 AOV)
+- Generates **$10K-50K+ monthly revenue** (at 1-5% conversion)
 - Pays **$0 in platform fees**
 
 Most businesses paying $39-399/month on Shopify or BigCommerce don't come close to these traffic levels.
@@ -86,10 +86,9 @@ Most businesses paying $39-399/month on Shopify or BigCommerce don't come close 
 For just $5/month, you get:
 - **200,000-500,000 monthly visitors**
 - **10,000-15,000 concurrent shoppers**
-- Potential for **$500K+ monthly revenue**
-- Platform cost: **0.001% of revenue**
+- Potential for **$20K-250K+ monthly revenue**
 
-At this scale, traditional platforms charge $105-399/month. You pay $5.
+**At this traffic level, enterprise platforms charge $2,300-15,000+/month. You pay $5.**
 
 ### When to Upgrade
 
@@ -121,9 +120,9 @@ For $25/month, you get:
 - **50,000 products** (50x increase)
 - Same massive traffic capacity (~500K MAU)
 - Full inventory management in Airtable
-- Potential for **$500K+ monthly revenue**
+- Potential for **$20K-250K+ monthly revenue**
 
-Traditional platforms with 50K product support: $299-399/month. You pay $25.
+**Enterprise platforms with 50K products at this traffic: $2,300-15,000+/month. You pay $25.**
 
 ---
 
@@ -192,98 +191,93 @@ At this point, consider migrating from Airtable to a more scalable database.
 
 ## Platform Comparison: DreamShop vs Alternatives
 
-### The Real Question
+### The Reality at 200K-500K MAU
 
-Other platforms charge $39-399/month. What do you actually get for that money?
+Operating at 200,000–500,000 monthly visitors with 10,000–15,000 concurrent shoppers requires enterprise-level platforms. Here's what they actually cost (2026 pricing):
 
-| Traffic Level | DreamShop Cost | Shopify | BigCommerce | Savings |
-|---------------|----------------|---------|-------------|---------|
-| 100K MAU | **$0** | $39 | $39 | $468/year |
-| 200K MAU | **$5** | $105 | $105 | $1,200/year |
-| 500K MAU | **$5** | $399 | $299 | $3,528/year |
+### Enterprise Platform Costs
 
-### At Free Tier ($0/month)
+| Platform | Base Monthly Cost | Additional Costs | Total Monthly |
+|----------|-------------------|------------------|---------------|
+| **DreamShop** | **$5-25** | Stripe fees only | **$5-25** |
+| Shopify Plus | $2,300-2,500 | Apps: $500-3,000 | **$2,800-5,500** |
+| Adobe Commerce | $2,000-15,000 | Dev retainer: $5,000-20,000 | **$7,000-35,000** |
+| BigCommerce Enterprise | $1,000+ | Scales with revenue | **$1,000-5,000+** |
 
-| Platform | Monthly Cost | Products | Transaction Fee | MAU Limit |
-|----------|-------------|----------|-----------------|-----------|
-| **DreamShop** | **$0** | 1,000 | 2.9% + $0.30 (Stripe only) | **~100K-150K** |
-| Shopify | $39+ | Unlimited | 2.9% + $0.30 + 2% | Unlimited |
-| BigCommerce | $39+ | Unlimited | 2.2-2.9% + $0.30 | $50K sales cap |
-| Squarespace | $27+ | Unlimited | 2.9% + $0.30 + 2% | Unlimited |
-| Wix | $29+ | Unlimited | 2.9% + $0.30 | Unlimited |
-| WooCommerce | $10-30+ (hosting) | Unlimited | 2.9% + $0.30 | Depends on host |
+### Shopify Plus Details
+- **Base**: $2,300/month (3-year term) or $2,500/month (1-year term)
+- **Revenue sharing**: If monthly revenue exceeds $800K, switches to 0.25% of revenue (capped at $40K/month)
+- **Apps**: High-volume stores typically spend $500-3,000/month on third-party apps
+- **Payment fees**: 2.15% + $0.30 with Shopify Payments, +0.2-0.6% if using external gateway
 
-**DreamShop advantage**: Handle 100K+ MAU while competitors charge $39/month for the same traffic.
+### Adobe Commerce (Magento) Details
+- **Licensing**: $2,000-15,000/month based on GMV tier
+- **Example**: $10M-25M annual revenue = ~$6,250/month ($75K/year) for license alone
+- **Maintenance**: Additional $5,000-20,000/month for dedicated development
+- **Infrastructure**: Self-hosted requires $500-5,000/month cloud hosting (AWS/Azure)
 
-### At $5/month (DreamShop Starter)
+### BigCommerce Enterprise Details
+- **Base**: Starts ~$1,000/month, scales with sales volume
+- **Auto-upgrade**: Automatically moves you to higher tiers at revenue thresholds
+- **Custom pricing**: Required for high-volume stores
 
-| Platform | Monthly Cost | Products | Transaction Fee | MAU |
-|----------|-------------|----------|-----------------|-----|
-| **DreamShop** | **$5** | 1,000 | 2.9% + $0.30 | **~200K-500K** |
-| Shopify Starter | $5 | Unlimited | **5%** | Unlimited |
-| BigCommerce | $39 | Unlimited | 2.2-2.9% | $50K sales cap |
-| Squarespace | $16 | Unlimited | 2.9% + 2% | Unlimited |
-| Wix | $17 | Unlimited | 2.9% + $0.30 | Unlimited |
+### Additional Operating Costs (All Platforms)
 
-**DreamShop advantage**: 500K MAU for $5. Shopify Starter charges 5% transaction fee (costs $5,000 on $100K revenue).
+| Cost Type | Typical Range | Notes |
+|-----------|---------------|-------|
+| Payment processing | 2.15-2.9% + $0.30 | Negotiable at high volume |
+| Third-party gateway fee | 0.2-0.6% | If not using platform's native gateway |
+| Cloud hosting (self-hosted) | $500-5,000/month | For 15K concurrent users |
+| CDN/Performance | $100-1,000/month | Often included in enterprise plans |
 
-### At $25/month (DreamShop Growth)
+### The DreamShop Difference
 
-| Platform | Monthly Cost | Products | Transaction Fee | Notes |
-|----------|-------------|----------|-----------------|-------|
-| **DreamShop** | **$25** | **50,000** | 2.9% + $0.30 | No sales caps |
-| Shopify Basic | $39 | Unlimited | 2.9% + $0.30 | +2% if not using Shopify Payments |
-| BigCommerce Plus | $79 | Unlimited | 2.2-2.9% | **$180K sales cap** |
-| Squarespace Core | $23 | Unlimited | 2.9% + $0.30 | Limited features |
-| Wix Business | $36 | Unlimited | 2.9% + $0.30 | - |
+| Traffic Level | DreamShop | Enterprise Alternative | You Save |
+|---------------|-----------|------------------------|----------|
+| 100K MAU | **$0** | $39-105/month | $468-1,260/year |
+| 200K-500K MAU | **$5** | $2,300-5,500/month | **$27,540-65,940/year** |
+| 500K+ MAU | **$25-50** | $7,000-35,000/month | **$83,400-419,400/year** |
 
-**DreamShop advantage**: 50K products, 500K MAU, no sales caps, no platform lock-in, own your code.
+### Why DreamShop Can Do This
 
-### At $50/month (DreamShop Scale)
+Traditional platforms charge for:
+- Server infrastructure → **Cloudflare provides free**
+- Bandwidth → **Cloudflare provides unlimited free**
+- CDN/Edge caching → **Cloudflare provides free**
+- Database operations → **Cached, near-zero Airtable calls**
 
-| Platform | Monthly Cost | Products | Features |
-|----------|-------------|----------|----------|
-| **DreamShop + Supabase** | $50 | Unlimited | Full SQL, realtime |
-| Shopify Grow | $105 | Unlimited | Better reports, 5 staff |
-| BigCommerce Pro | $299 | Unlimited | $400K sales cap |
-| Squarespace Plus | $39 | Unlimited | Subscriptions, advanced |
-
-**DreamShop advantage**: Unlimited products, no sales caps, own your data.
-
-### Annual Cost Comparison (assuming $50K/year in sales)
-
-| Platform | Annual Platform Cost | Transaction Fees* | Total Annual Cost |
-|----------|---------------------|-------------------|-------------------|
-| **DreamShop (Growth)** | $300 | $1,450 | **$1,750** |
-| Shopify Basic | $468 | $1,450 | $1,918 |
-| BigCommerce Standard | $348 | $1,100-1,450 | $1,448-1,798 |
-| Squarespace Core | $276 | $1,450 | $1,726 |
-| Wix Business | $432 | $1,450 | $1,882 |
-
-*Transaction fees estimated at 2.9% + $0.30 average on $50K sales
+You only pay for what actually costs money: Stripe's payment processing (2.9% + $0.30).
 
 ---
 
 ## Cost Scaling Visualization
 
 ```
-Monthly Cost vs Scale
+Monthly Cost vs Scale (at 200K-500K MAU)
 
-$300 |                                          ┌─ Shopify Advanced
-     |                                    ┌────┘
-$200 |                              ┌─────┘
-     |                        ┌─────┘
-$100 |                  ┌─────┘─────────────────── BigCommerce Pro
-     |            ┌─────┘
- $50 |      ┌─────┴─────────────────────────────── DreamShop + Supabase
-     |      │     ┌───────────────────────────── Shopify Basic
- $25 |──────┴─────┴───────────────────────────── DreamShop Growth
-     |
-  $5 |──────────────────────────────────────────── DreamShop Starter
-     |
-  $0 |──────────────────────────────────────────── DreamShop Free
-     └────────────────────────────────────────────────────────────
-       10K     50K    100K    150K   200K   500K    MAU →
+$35,000 |                                    ┌─── Adobe Commerce (high)
+        |                              ┌─────┘
+$15,000 |                        ┌─────┘
+        |                  ┌─────┘
+ $7,000 |            ┌─────┴───────────────────── Adobe Commerce (low)
+        |      ┌─────┘
+ $5,500 |──────┴───────────────────────────────── Shopify Plus + Apps
+        |
+ $2,300 |──────────────────────────────────────── Shopify Plus (base)
+        |
+ $1,000 |──────────────────────────────────────── BigCommerce Enterprise
+        |
+   $105 |──────────────────────────────────────── Shopify Grow
+    $39 |──────────────────────────────────────── Shopify Basic
+        |
+    $25 |──────────────────────────────────────── DreamShop Growth
+     $5 |──────────────────────────────────────── DreamShop Starter
+     $0 |──────────────────────────────────────── DreamShop Free
+        └──────────────────────────────────────────────────────────
+          100K   150K   200K   300K   400K   500K    MAU →
+
+Note: Shopify Basic/Grow cannot actually handle 200K-500K MAU
+with 10K-15K CCU - enterprise plans are required at this scale.
 ```
 
 ---
@@ -326,34 +320,40 @@ START: Using DreamShop Free (~100K-150K MAU capacity)
 
 ### The DreamShop Advantage
 
-| Your Revenue | DreamShop Cost | Shopify Cost | You Save |
-|--------------|----------------|--------------|----------|
-| $100K/month | $0 | $39 + 2% = $2,039 | **$24,468/year** |
-| $250K/month | $5 | $105 + fees | **$1,200+/year** |
-| $500K/month | $25 | $399 + fees | **$4,488/year** |
+| Traffic | DreamShop | Enterprise Alternative | Annual Savings |
+|---------|-----------|------------------------|----------------|
+| 100K MAU | $0/month | $39-105/month | $468-1,260 |
+| 200K-500K MAU | $5/month | $2,300-5,500/month | **$27,540-65,940** |
+| 500K+ MAU | $25-50/month | $7,000-35,000/month | **$83,400-419,400** |
 
 ### Why It Works
 
-DreamShop's architecture exploits a key insight: **Cloudflare's edge caching eliminates the database bottleneck**.
+DreamShop's architecture exploits a key insight: **Cloudflare's edge caching eliminates the infrastructure costs that enterprise platforms charge for**.
 
-Traditional platforms charge based on features and scale. DreamShop runs on infrastructure with:
-- **Unlimited bandwidth** (Cloudflare Pages)
-- **100K requests/day free** (Workers)
-- **10GB storage free** (R2)
-- **Smart caching** that reduces database calls to near-zero
-
-The result: enterprise-grade e-commerce at $0-25/month.
+Traditional platforms charge for:
+| Cost Item | Traditional | DreamShop |
+|-----------|-------------|-----------|
+| Server infrastructure | $500-5,000/month | Free (Cloudflare) |
+| Bandwidth/CDN | $100-1,000/month | Free (unlimited) |
+| Database operations | Metered | Free (cached) |
+| Platform fee | $1,000-35,000/month | $0-25 |
 
 ### What You Get
 
-| Tier | Cost | MAU | Revenue Potential | Platform Alternative Cost |
-|------|------|-----|-------------------|---------------------------|
-| **Free** | $0 | 100K-150K | $100K+/month | $39-105/month |
-| **Starter** | $5 | 200K-500K | $500K+/month | $105-399/month |
-| **Growth** | $25 | 200K-500K | $500K+/month | $299-399/month |
-| **Scale** | $50+ | 1M+ | Unlimited | Custom enterprise |
+| Tier | Cost | MAU | CCU | Enterprise Equivalent |
+|------|------|-----|-----|----------------------|
+| **Free** | $0 | 100K-150K | 3K-5K | Shopify Basic ($39) |
+| **Starter** | $5 | 200K-500K | 10K-15K | Shopify Plus ($2,300+) |
+| **Growth** | $25 | 200K-500K | 10K-15K | Shopify Plus ($2,300+) |
+| **Scale** | $50+ | 1M+ | 50K+ | Adobe Commerce ($7,000+) |
 
-**Own your code. Own your data. Pay almost nothing.**
+### The Bottom Line
+
+DreamShop delivers **enterprise-grade traffic capacity** (500K MAU, 15K CCU) for **$5/month**.
+
+The same capacity on Shopify Plus costs **$2,300+/month**. On Adobe Commerce, **$7,000+/month**.
+
+**Own your code. Own your data. Save $27,000-400,000/year.**
 
 ---
 
