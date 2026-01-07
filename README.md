@@ -266,13 +266,42 @@ This prevents Airtable's expiring URLs from breaking images.
 6. Stripe webhook → Order updated to "Paid"
 7. Shipping address captured from Stripe
 
-## Limitations
+## Costs & Scaling
 
-- **Airtable free tier**: 1,000 records max
-- **Best for**: Small shops with < 100 products
-- **Not for**: High-volume stores
+**Handle 500K monthly visitors for $5. Enterprise platforms charge $2,300+/month for the same traffic.**
 
-When you outgrow this, consider Shopify or a custom solution.
+| Tier | Monthly Cost | Products | MAU | CCU |
+|------|-------------|----------|-----|-----|
+| **Free** | $0 | 1,000 | ~100K-150K | ~3K-5K |
+| **Starter** | $5 | 1,000 | ~200K-500K | ~10K-15K |
+| **Growth** | $25 | 50,000 | ~500K | ~15K |
+| **Scale** | $30-70 | 50,000 | 1M-5M | 50K+ |
+
+Workers scale infinitely at $0.50/million requests. No load balancer needed.
+
+```
+Monthly Cost vs Scale (at 200K-500K MAU)
+
+$35,000 |                                    ┌─── Adobe Commerce (high)
+        |                              ┌─────┘
+$15,000 |                        ┌─────┘
+        |                  ┌─────┘
+ $7,000 |            ┌─────┴───────────────────── Adobe Commerce (low)
+        |      ┌─────┘
+ $5,500 |──────┴───────────────────────────────── Shopify Plus + Apps
+        |
+ $2,300 |──────────────────────────────────────── Shopify Plus (base)
+        |
+ $1,000 |──────────────────────────────────────── BigCommerce Enterprise
+        |
+    $25 |──────────────────────────────────────── DreamShop Growth
+     $5 |──────────────────────────────────────── DreamShop Starter
+     $0 |──────────────────────────────────────── DreamShop Free
+        └──────────────────────────────────────────────────────────
+          100K   150K   200K   300K   400K   500K    MAU →
+```
+
+**[Full cost analysis and scaling guide →](docs/COSTS_AND_SCALING.md)**
 
 ## Live Example
 
