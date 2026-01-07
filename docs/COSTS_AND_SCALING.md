@@ -12,8 +12,10 @@ DreamShop's architecture leverages Cloudflare's edge caching and generous free t
 |------|-------------|----------|-----|-----|-------------------|
 | **Free** | $0 | 1,000 | ~100K-150K | ~3K-5K | $10K-50K/month |
 | **Starter** | $5 | 1,000 | ~200K-500K | ~10K-15K | $20K-250K/month |
-| **Growth** | $25 | 50,000 | ~200K-500K | ~10K-15K | $20K-250K/month |
-| **Scale** | $50+ | Unlimited | 1M+ | 50K+ | Unlimited |
+| **Growth** | $25 | 50,000 | ~500K | ~15K | $20K-250K/month |
+| **Scale** | $30-70 | 50,000 | 1M-5M | 50K+ | Unlimited |
+
+Workers scale infinitely at $0.50/million requests. No load balancer needed.
 
 *Revenue potential at 1-5% conversion, $10-50 average order value
 
@@ -130,12 +132,26 @@ For $25/month, you get:
 
 At this point, consider migrating from Airtable to a more scalable database.
 
+### Workers Scale Infinitely
+
+**Important**: Cloudflare Workers auto-scale with no configuration needed. Beyond 10M requests/month, you simply pay $0.50 per additional million requests.
+
+| MAU | Est. Requests | Worker Cost | Total (with $20 Airtable) |
+|-----|---------------|-------------|---------------------------|
+| 500K | ~10M | $5 | $25 |
+| 1M | ~20M | $10 | $30 |
+| 2M | ~40M | $20 | $40 |
+| 5M | ~100M | $50 | $70 |
+
+**There is no architectural bottleneck.** DreamShop scales linearly with usage costs.
+
 ### Migration Triggers
+
+The only reasons to migrate from Airtable:
 
 | Signal | Threshold | Action |
 |--------|-----------|--------|
 | Products | >50,000 | Migrate to SQL database |
-| MAU | >500K | Consider edge caching |
 | API complexity | JOINs, aggregations | Migrate to SQL |
 | Real-time needs | Live inventory | Use Supabase Realtime |
 | Cost efficiency | >$100/mo on Airtable | SQL is cheaper at scale |
@@ -344,14 +360,16 @@ Traditional platforms charge for:
 |------|------|-----|-----|----------------------|
 | **Free** | $0 | 100K-150K | 3K-5K | Shopify Basic ($39) |
 | **Starter** | $5 | 200K-500K | 10K-15K | Shopify Plus ($2,300+) |
-| **Growth** | $25 | 200K-500K | 10K-15K | Shopify Plus ($2,300+) |
-| **Scale** | $50+ | 1M+ | 50K+ | Adobe Commerce ($7,000+) |
+| **Growth** | $25 | ~500K | ~15K | Shopify Plus ($2,300+) |
+| **Scale** | $30-70 | 1M-5M | 50K+ | Adobe Commerce ($7,000+) |
 
 ### The Bottom Line
 
 DreamShop delivers **enterprise-grade traffic capacity** (500K MAU, 15K CCU) for **$5/month**.
 
-The same capacity on Shopify Plus costs **$2,300+/month**. On Adobe Commerce, **$7,000+/month**.
+At 5M MAU, you pay **~$70/month**. The same capacity on Adobe Commerce costs **$7,000-35,000/month**.
+
+**There is no architectural ceiling.** Workers scale infinitely—you just pay $0.50 per million extra requests.
 
 **Own your code. Own your data. Save $27,000-400,000/year.**
 
