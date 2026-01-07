@@ -1,0 +1,880 @@
+<script>
+function shop() {
+  return {
+    // State
+    page: 'home',
+    loading: true,
+    products: [],
+    allProducts: [],
+    events: [],
+    loadingEvents: false,
+    eventFilter: 'upcoming',
+    deals: [],
+    loadingDeals: false,
+    cart: [],
+    availableTags: [],
+    selectedTags: [],
+    selectedColors: [],
+    madeByMeFilter: false,
+    searchQuery: '',
+    filteredProducts: [],
+    currentDisplayIndex: 0,
+    pageSize: 20,
+    hasMoreProducts: true,
+    loadingMore: false,
+    showModal: false,
+    selectedProduct: null,
+    modalSelection: { color: null, size: null },
+    showContactModal: false,
+    contactSubmitting: false,
+    contactSuccess: false,
+    showImageModal: false,
+    selectedImageUrl: '',
+    selectedImageAlt: '',
+    selectedProductImages: [],
+    currentImageIndex: 0,
+    showEventModal: false,
+    selectedEvent: null,
+    showMobileMenu: false,
+    showCacheRefreshModal: false,
+    cacheRefreshStatus: '',
+    cacheRefreshLogs: [],
+    paymentSuccess: false,
+    paymentCancelled: false,
+    pendingOrderId: null,
+    submitting: false,
+    searchQuery: '',
+
+    // Config - loaded from config.js
+    API_BASE_URL: CONFIG.API_BASE_URL,
+    SHIPPING_FLAT_RATE: CONFIG.SHIPPING_FLAT_RATE,
+    FREE_SHIPPING_THRESHOLD: CONFIG.FREE_SHIPPING_THRESHOLD,
+    
+    // Order form
+    order: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      notes: '',
+      localPickup: false
+    },
+    
+    // Contact form
+    contact: {
+      name: '',
+      email: '',
+      message: ''
+    },
+    
+    // Computed
+    get filteredEvents() {
+      const now = new Date();
+      now.setHours(0, 0, 0, 0); // Start of today
+      
+      return this.events.filter(event => {
+        if (this.eventFilter === 'upcoming') {
+          return new Date(event.date) >= now && event.status === 'Upcoming';
+        } else if (this.eventFilter === 'past') {
+          return new Date(event.date) < now || event.status === 'Completed';
+        }
+        return true; // 'all'
+      }).sort((a, b) => {
+        // Sort upcoming events by date ascending, past events by date descending
+        if (this.eventFilter === 'upcoming') {
+          return new Date(a.date) - new Date(b.date);
+        } else {
+          return new Date(b.date) - new Date(a.date);
+        }
+      });
+    },
+    get cartCount() {
+      return this.cart.reduce((sum, item) => sum + item.qty, 0);
+    },
+    get cartSubtotal() {
+      return this.cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    },
+    get shippingCost() {
+      if (this.order.localPickup || this.cart.length === 0) return 0;
+      if (this.cartSubtotal >= this.FREE_SHIPPING_THRESHOLD) return 0;
+      return this.SHIPPING_FLAT_RATE;
+    },
+    get freeShippingThreshold() {
+      return this.FREE_SHIPPING_THRESHOLD;
+    },
+    get amountForFreeShipping() {
+      return Math.max(0, this.freeShippingThreshold - this.cartSubtotal);
+    },
+    get appliedDeal() {
+      // Find all deals that qualify (subtotal >= minAmount)
+      const qualifyingDeals = this.deals.filter(deal => this.cartSubtotal >= deal.minAmount);
+      if (qualifyingDeals.length === 0) return null;
+
+      // Calculate effective discount for each and pick the best one
+      let bestDeal = null;
+      let bestDiscount = 0;
+
+      for (const deal of qualifyingDeals) {
+        let discount;
+        if (deal.discountType === 'Percentage') {
+          discount = this.cartSubtotal * (deal.discountValue / 100);
+        } else {
+          discount = deal.discountValue;
+        }
+        if (discount > bestDiscount) {
+          bestDiscount = discount;
+          bestDeal = deal;
+        }
+      }
+      return bestDeal;
+    },
+    get discountAmount() {
+      if (!this.appliedDeal) return 0;
+      if (this.appliedDeal.discountType === 'Percentage') {
+        return this.cartSubtotal * (this.appliedDeal.discountValue / 100);
+      }
+      return this.appliedDeal.discountValue;
+    },
+    get cartTotal() {
+      return Math.max(0, this.cartSubtotal - this.discountAmount) + this.shippingCost;
+    },
+    get canSubmit() {
+      return this.order.firstName && this.order.lastName && this.order.email && this.cart.length > 0;
+    },
+    get canSubmitContact() {
+      return this.contact.name && this.contact.email && this.contact.message;
+    },
+    
+    // Format price display: show .50 for half dollars, but $3 not $3.00
+    formatPrice(price) {
+      if (price % 1 === 0) return price.toString(); // Whole dollars: $3
+      return price.toFixed(2); // Decimals: $0.50, $3.25
+    },
+    
+    // Methods
+    async init() {
+      // Check for payment status URL parameters
+      this.handlePaymentReturn();
+
+      // Check for cache refresh URL parameters
+      this.handleCacheRefresh();
+
+      await this.fetchProducts();
+      await this.fetchEvents();
+      await this.fetchDeals();
+      this.loadCart();
+      this.setupInfiniteScroll();
+
+      // Handle deep linking (e.g., #product/SKU)
+      this.handleDeepLink();
+
+      // Listen for hash changes (back/forward navigation)
+      window.addEventListener('hashchange', () => this.handleDeepLink());
+    },
+
+    // Handle return from Stripe payment
+    handlePaymentReturn() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const payment = urlParams.get('payment');
+      const orderId = urlParams.get('order');
+
+      if (payment === 'success') {
+        this.paymentSuccess = true;
+        this.page = 'cart';
+        // Clear cart after successful payment
+        this.cart = [];
+        this.saveCart();
+        // Clean up URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+      } else if (payment === 'cancelled' && orderId) {
+        this.paymentCancelled = true;
+        this.pendingOrderId = orderId;
+        this.page = 'cart';
+        // Clean up URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    },
+    
+    // Handle cache refresh from URL parameters
+    handleCacheRefresh() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const refresh = urlParams.get('refresh');
+      const table = urlParams.get('table');
+      const key = urlParams.get('key');
+      
+      if (refresh === 'true' && key) {
+        // Show notification that cache refresh is happening
+        console.log('Cache refresh requested for:', table || 'all tables');
+        this.refreshCache(table, key);
+        
+        // Clean up URL without the refresh parameters
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, document.title, newUrl);
+      } else if (refresh === 'true' && !key) {
+        console.warn('Cache refresh requires admin key');
+      }
+    },
+    
+    // Refresh cache for specific tables or all
+    async refreshCache(table, adminKey) {
+      if (!adminKey) {
+        console.warn('Admin key required for cache refresh');
+        return;
+      }
+
+      // Show loading modal
+      this.showCacheRefreshModal = true;
+      this.cacheRefreshStatus = 'Starting cache refresh...';
+      this.cacheRefreshLogs = [];
+
+      const tables = [];
+      if (!table || table === 'all') {
+        tables.push({ name: 'products', url: `${this.API_BASE_URL}/products?refresh=true&key=${adminKey}` });
+        tables.push({ name: 'events', url: `${this.API_BASE_URL}/events?refresh=true&key=${adminKey}` });
+        tables.push({ name: 'deals', url: `${this.API_BASE_URL}/deals?refresh=true&key=${adminKey}` });
+      } else {
+        tables.push({ name: table.toLowerCase(), url: `${this.API_BASE_URL}/${table.toLowerCase()}?refresh=true&key=${adminKey}` });
+      }
+
+      let hasError = false;
+
+      for (const t of tables) {
+        // Add a pending entry for this table
+        const logIndex = this.cacheRefreshLogs.length;
+        this.cacheRefreshLogs.push(`⏳ ${t.name}: Refreshing...`);
+
+        try {
+          this.cacheRefreshStatus = `Refreshing ${t.name}...`;
+
+          const response = await fetch(t.url);
+
+          if (response.ok) {
+            const data = await response.json();
+            const syncStats = data.sync_stats;
+
+            if (syncStats) {
+              // Update the pending entry to success
+              this.cacheRefreshLogs[logIndex] = `✅ ${t.name}: ${syncStats.products_with_sku} products synced`;
+              if (syncStats.images_uploaded > 0) {
+                this.cacheRefreshLogs.push(`   📤 Uploaded ${syncStats.images_uploaded} images`);
+              }
+              if (syncStats.images_deleted > 0) {
+                this.cacheRefreshLogs.push(`   🗑️ Deleted ${syncStats.images_deleted} images`);
+              }
+              if (syncStats.images_skipped > 0) {
+                this.cacheRefreshLogs.push(`   ⏭️ Skipped ${syncStats.images_skipped} (already in R2)`);
+              }
+            } else {
+              // Update the pending entry to success
+              this.cacheRefreshLogs[logIndex] = `✅ ${t.name}: Refreshed (${data.total_count || 0} records)`;
+            }
+          } else {
+            throw new Error(`HTTP ${response.status}`);
+          }
+        } catch (error) {
+          console.error(`Cache refresh failed for ${t.name}:`, error);
+          // Update the pending entry to error
+          this.cacheRefreshLogs[logIndex] = `❌ ${t.name}: Failed - ${error.message}`;
+          hasError = true;
+        }
+      }
+
+      // Update final status
+      this.cacheRefreshStatus = hasError ? 'Completed with errors' : 'Cache refresh complete!';
+      this.cacheRefreshLogs.push('');
+      this.cacheRefreshLogs.push(hasError ? '⚠️ Some refreshes failed' : '🎉 All done!');
+
+      // Reload data to reflect changes
+      if (!hasError) {
+        if (!table || table === 'all' || table === 'products') {
+          await this.fetchProducts(true);
+        }
+        if (!table || table === 'all' || table === 'events') {
+          await this.fetchEvents(true);
+        }
+        if (!table || table === 'all' || table === 'deals') {
+          await this.fetchDeals(true);
+        }
+      }
+    },
+    
+    // Show cache refresh notification
+    showCacheRefreshNotification(table, isError = false) {
+      const message = isError 
+        ? `Failed to refresh cache for ${table}` 
+        : `Cache refreshed successfully for ${table}`;
+        
+      // Create a simple notification
+      const notification = document.createElement('div');
+      notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-medium ${
+        isError ? 'bg-red-500' : 'bg-green-500'
+      }`;
+      notification.textContent = message;
+      
+      document.body.appendChild(notification);
+      
+      // Auto remove after 3 seconds
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
+        }
+      }, 3000);
+    },
+    
+    extractAvailableTags() {
+      const allTags = new Set();
+      this.allProducts.forEach(product => {
+        if (product.tags) {
+          product.tags.forEach(tag => allTags.add(tag));
+        }
+      });
+      this.availableTags = Array.from(allTags).sort();
+    },
+    
+    setupInfiniteScroll() {
+      const handleScroll = () => {
+        if (this.loadingMore || !this.hasMoreProducts || this.page !== 'home') return;
+        
+        // Support both document.documentElement and document.body for better mobile compatibility
+        const scrollElement = document.documentElement.scrollHeight > document.body.scrollHeight 
+          ? document.documentElement 
+          : document.body;
+          
+        const scrollHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+        const scrollTop = Math.max(document.documentElement.scrollTop, document.body.scrollTop, window.pageYOffset);
+        const clientHeight = Math.min(document.documentElement.clientHeight, window.innerHeight);
+        
+        // Trigger load when within 300px of bottom
+        if (scrollTop + clientHeight >= scrollHeight - 300) {
+          this.loadMoreProducts();
+        }
+      };
+      
+      // Use passive listener for better performance on mobile
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      
+      // Also listen to touchmove for iOS
+      window.addEventListener('touchmove', handleScroll, { passive: true });
+    },
+    
+
+    async performSearch() {
+      this.applyFiltersAndSearch();
+    },
+
+    clearSearch() {
+      this.searchQuery = '';
+      this.applyFiltersAndSearch();
+    },
+
+    async fetchProducts(bustCache = false) {
+      this.loading = true;
+
+      try {
+        // Fetch all products from worker cache (no pagination needed)
+        let url = `${this.API_BASE_URL}/products`;
+        if (bustCache) {
+          url += `?_bust=${Date.now()}`;
+        }
+        
+        const response = await fetch(url, {
+          headers: bustCache ? { 'Cache-Control': 'no-cache' } : {}
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch products from API');
+        }
+        
+        const data = await response.json();
+        
+        // Store all products in memory for client-side filtering and pagination
+        this.allProducts = data.records;
+        this.extractAvailableTags();
+        
+        // Apply current filters and search
+        this.applyFiltersAndSearch();
+        
+      } catch (error) {
+        console.error('Failed to fetch products:', error);
+        // Fallback to demo products if API fails
+        this.allProducts = [
+          { id: '1', name: 'Rainbow Dragon', price: 12, image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=400&h=400&fit=crop', images: [], description: 'A magical dragon with beautiful scales. Perfect for your desk!', madeByMe: true, colors: ['Rainbow', 'Purple', 'Blue', 'Green'], tags: ['Dragons', 'Fantasy'], pinned: true },
+          { id: '2', name: 'Cute Bunny', price: 8, image: 'https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=400&h=400&fit=crop', images: [], description: 'Adorable bunny friend. Makes a great gift!', madeByMe: true, colors: ['White', 'Pink', 'Gray'], tags: ['Animals', 'Cute'], pinned: false },
+          { id: '3', name: 'Space Rocket', price: 15, image: 'https://images.unsplash.com/photo-1457364559154-aa2644600ebb?w=400&h=400&fit=crop', images: [], description: 'Blast off to adventure! Detailed rocket ship.', madeByMe: false, colors: ['Red', 'Blue', 'Silver'], sizes: ['Small', 'Large'], tags: ['Space', 'Vehicles'], pinned: false },
+          { id: '4', name: 'Unicorn', price: 14, image: 'https://images.unsplash.com/photo-1509335035496-c47fc836517f?w=400&h=400&fit=crop', images: [], description: 'Magical unicorn with sparkle finish option.', madeByMe: true, colors: ['White', 'Pink', 'Rainbow'], tags: ['Fantasy', 'Cute'], pinned: false },
+          { id: '5', name: 'Dinosaur Collection', price: 10, image: 'https://images.unsplash.com/photo-1519066629447-267fffa62d4b?w=400&h=400&fit=crop', images: [], description: 'Friendly T-Rex for dino lovers!', madeByMe: false, colors: ['Green', 'Brown', 'Blue'], tags: ['Animals', 'Dinosaurs'], pinned: false },
+          { id: '6', name: 'Star Keychain', price: 5, image: 'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=400&h=400&fit=crop', images: [], description: 'Cute keychain for your backpack or keys.', madeByMe: true, colors: ['Gold', 'Silver', 'Pink', 'Blue'], tags: ['Accessories', 'Small'], pinned: false },
+        ];
+        this.extractAvailableTags();
+        this.applyFiltersAndSearch();
+      } finally {
+        this.loading = false;
+      }
+    },
+    
+    // Client-side filtering and search with infinite scroll
+    applyFiltersAndSearch() {
+      let filtered = this.allProducts;
+      
+      // Apply search filter
+      if (this.searchQuery.trim()) {
+        const query = this.searchQuery.toLowerCase().trim();
+        filtered = filtered.filter(product => 
+          product.name.toLowerCase().includes(query) ||
+          product.description.toLowerCase().includes(query) ||
+          product.tags.some(tag => tag.toLowerCase().includes(query)) ||
+          product.colors.some(color => color.toLowerCase().includes(query))
+        );
+      }
+      
+      // Apply "Made By Me" filter
+      if (this.madeByMeFilter) {
+        filtered = filtered.filter(product => product.madeByMe === true);
+      }
+      
+      // Apply tag filter
+      if (this.selectedTags.length > 0) {
+        filtered = filtered.filter(product =>
+          this.selectedTags.every(selectedTag =>
+            product.tags.some(productTag => productTag === selectedTag)
+          )
+        );
+      }
+      
+      // Apply color filter
+      if (this.selectedColors.length > 0) {
+        filtered = filtered.filter(product =>
+          this.selectedColors.every(selectedColor =>
+            product.colors.some(productColor => productColor === selectedColor)
+          )
+        );
+      }
+      
+      // Reset pagination and show first page
+      this.filteredProducts = filtered;
+      this.currentDisplayIndex = 0;
+      this.loadMoreProducts();
+    },
+    
+    // Load more products for infinite scroll
+    loadMoreProducts() {
+      const endIndex = Math.min(
+        this.currentDisplayIndex + this.pageSize,
+        this.filteredProducts.length
+      );
+      
+      if (this.currentDisplayIndex === 0) {
+        this.products = this.filteredProducts.slice(0, endIndex);
+      } else {
+        this.products = [
+          ...this.products,
+          ...this.filteredProducts.slice(this.currentDisplayIndex, endIndex)
+        ];
+      }
+      
+      this.currentDisplayIndex = endIndex;
+      this.hasMoreProducts = endIndex < this.filteredProducts.length;
+      this.loadingMore = false;
+    },
+    
+    // Filter management methods
+    clearAllFilters() {
+      this.selectedTags = [];
+      this.selectedColors = [];
+      this.madeByMeFilter = false;
+      this.applyFiltersAndSearch();
+    },
+    
+    toggleMadeByMeFilter() {
+      this.madeByMeFilter = !this.madeByMeFilter;
+      this.applyFiltersAndSearch();
+    },
+    
+    toggleTagFilter(tag) {
+      const index = this.selectedTags.indexOf(tag);
+      if (index > -1) {
+        this.selectedTags.splice(index, 1);
+      } else {
+        this.selectedTags.push(tag);
+      }
+      this.applyFiltersAndSearch();
+    },
+    
+    async fetchEvents(bustCache = false) {
+      this.loadingEvents = true;
+      
+      try {
+        let url = `${this.API_BASE_URL}/events`;
+        if (bustCache) {
+          url += `?_bust=${Date.now()}`;
+        }
+        
+        const response = await fetch(url, {
+          headers: bustCache ? { 'Cache-Control': 'no-cache' } : {}
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch events from API');
+        }
+        
+        const data = await response.json();
+        this.events = data.records;
+        
+      } catch (error) {
+        console.error('Failed to fetch events:', error);
+        // Fallback to demo events if Airtable fails
+        this.events = [
+          {
+            id: '1',
+            name: 'Downtown Farmers Market',
+            date: '2024-12-29',
+            startTime: '9:00 AM',
+            endTime: '2:00 PM',
+            location: 'Main Street Park, 123 Main St',
+            city: 'Anytown',
+            state: 'CA',
+            eventType: 'Market',
+            description: 'Come visit my booth at the weekly farmers market! I\'ll have all my latest prints plus some market-exclusive designs.',
+            website: 'https://downtownfarmersmarket.com',
+            status: 'Upcoming',
+            featured: true,
+            images: [],
+            specialItems: 'Market-exclusive mini keychains!',
+            notes: ''
+          },
+          {
+            id: '2', 
+            name: 'Spring Craft Fair',
+            date: '2024-12-15',
+            startTime: '10:00 AM',
+            endTime: '4:00 PM',
+            location: 'Community Center, 456 Oak Ave',
+            city: 'Anytown',
+            state: 'CA',
+            eventType: 'Fair',
+            description: 'Had an amazing time at the spring craft fair! Thanks to everyone who stopped by.',
+            website: '',
+            status: 'Completed',
+            featured: false,
+            images: [],
+            specialItems: '',
+            notes: ''
+          }
+        ];
+      } finally {
+        this.loadingEvents = false;
+      }
+    },
+
+    async fetchDeals(bustCache = false) {
+      this.loadingDeals = true;
+
+      try {
+        let url = `${this.API_BASE_URL}/deals`;
+        if (bustCache) {
+          url += `?_bust=${Date.now()}`;
+        }
+        
+        const response = await fetch(url, {
+          headers: bustCache ? { 'Cache-Control': 'no-cache' } : {}
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch deals from API');
+        }
+
+        const data = await response.json();
+        this.deals = data.records;
+
+      } catch (error) {
+        console.error('Failed to fetch deals:', error);
+        // Fallback to empty deals if API fails
+        this.deals = [];
+      } finally {
+        this.loadingDeals = false;
+      }
+    },
+
+    openProductModal(product) {
+      this.selectedProduct = product;
+      this.modalSelection = {
+        color: product.colors?.[0] || null,
+        size: product.sizes?.[0] || null
+      };
+      this.showModal = true;
+      // Update URL hash for deep linking (without triggering navigation)
+      if (product.sku) {
+        history.replaceState(null, '', `#product/${product.sku}`);
+      }
+    },
+
+    // Close modal and clear hash
+    closeProductModal() {
+      this.showModal = false;
+      this.selectedProduct = null;
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    },
+
+    // Share product on social media or via email
+    shareProduct(platform) {
+      if (!this.selectedProduct) return;
+
+      const product = this.selectedProduct;
+      const sku = product.sku || product.id;
+      // TODO: Update with your domain
+      const productUrl = `https://your-domain.com/#product/${sku}`;
+      const productName = product.name;
+      const productPrice = `$${this.formatPrice(product.price)}`;
+      const shareText = `Check out ${productName} (${productPrice}) from Your Shop Name!`;
+
+      switch (platform) {
+        case 'facebook':
+          window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(productUrl)}&quote=${encodeURIComponent(shareText)}`, '_blank', 'width=600,height=400');
+          break;
+        case 'twitter':
+          window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(productUrl)}`, '_blank', 'width=600,height=400');
+          break;
+        case 'email':
+          const emailSubject = `Check out this cool 3D print: ${productName}`;
+          const emailBody = `${shareText}\n\n${productUrl}`;
+          window.location.href = `mailto:?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+          break;
+        case 'copy':
+          navigator.clipboard.writeText(productUrl).then(() => {
+            // Show a brief toast notification
+            this.showToast('Link copied to clipboard!');
+          }).catch(() => {
+            // Fallback for older browsers
+            prompt('Copy this link:', productUrl);
+          });
+          break;
+      }
+    },
+
+    // Show toast notification
+    showToast(message) {
+      const toast = document.createElement('div');
+      toast.className = 'fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-6 py-3 rounded-full shadow-lg z-[100] transition-opacity';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 2000);
+    },
+
+    // Handle deep linking - open product from URL hash
+    handleDeepLink() {
+      const hash = window.location.hash;
+      if (hash.startsWith('#product/')) {
+        const sku = hash.replace('#product/', '');
+        // Wait for products to load, then open the modal
+        const checkProducts = () => {
+          if (this.products.length > 0) {
+            const product = this.products.find(p => p.sku === sku || p.id === sku);
+            if (product) {
+              this.openProductModal(product);
+            }
+          } else if (!this.loading) {
+            // Products loaded but not found - do nothing
+          } else {
+            // Still loading, check again
+            setTimeout(checkProducts, 100);
+          }
+        };
+        checkProducts();
+      }
+    },
+    
+    openImageModal(product) {
+      // Extract URLs from images array (handles both string URLs and attachment objects)
+      this.selectedProductImages = product.images && product.images.length > 0
+        ? product.images.map(img => typeof img === 'string' ? img : img.url)
+        : [product.image];
+      this.currentImageIndex = 0;
+      this.selectedImageUrl = this.selectedProductImages[0];
+      this.selectedImageAlt = product.name;
+      this.showImageModal = true;
+    },
+    
+    openEventModal(event) {
+      this.selectedEvent = event;
+      this.showEventModal = true;
+    },
+    
+    nextImage() {
+      if (this.currentImageIndex < this.selectedProductImages.length - 1) {
+        this.currentImageIndex++;
+        this.selectedImageUrl = this.selectedProductImages[this.currentImageIndex];
+      }
+    },
+    
+    prevImage() {
+      if (this.currentImageIndex > 0) {
+        this.currentImageIndex--;
+        this.selectedImageUrl = this.selectedProductImages[this.currentImageIndex];
+      }
+    },
+    
+    addToCart() {
+      const item = {
+        ...this.selectedProduct,
+        selectedColor: this.modalSelection.color,
+        selectedSize: this.modalSelection.size,
+        qty: 1
+      };
+      
+      // Check if same item with same options exists
+      const existingIndex = this.cart.findIndex(c => 
+        c.id === item.id && c.selectedColor === item.selectedColor && c.selectedSize === item.selectedSize
+      );
+      
+      if (existingIndex >= 0) {
+        this.cart[existingIndex].qty++;
+      } else {
+        this.cart.push(item);
+      }
+      
+      this.saveCart();
+      this.showModal = false;
+    },
+    
+    updateQty(index, delta) {
+      this.cart[index].qty += delta;
+      if (this.cart[index].qty <= 0) {
+        this.cart.splice(index, 1);
+      }
+      this.saveCart();
+    },
+    
+    removeFromCart(index) {
+      this.cart.splice(index, 1);
+      this.saveCart();
+    },
+    
+    saveCart() {
+      localStorage.setItem('dreamshop_cart', JSON.stringify(this.cart));
+    },
+    
+    loadCart() {
+      const saved = localStorage.getItem('dreamshop_cart');
+      if (saved) this.cart = JSON.parse(saved);
+    },
+    
+    async proceedToCheckout() {
+      if (!this.canSubmit || this.submitting) return;
+      this.submitting = true;
+
+      try {
+        const checkoutData = {
+          cart: this.cart,
+          customer: {
+            firstName: this.order.firstName,
+            lastName: this.order.lastName,
+            email: this.order.email,
+            address: this.order.address,
+            city: this.order.city,
+            state: this.order.state,
+            zip: this.order.zip,
+            country: this.order.country,
+            notes: this.order.notes,
+            localPickup: this.order.localPickup
+          },
+          shipping: this.shippingCost,
+          discount: this.appliedDeal ? {
+            name: this.appliedDeal.name,
+            amount: this.discountAmount
+          } : null,
+          totals: {
+            subtotal: this.cartSubtotal,
+            shipping: this.shippingCost,
+            discount: this.discountAmount,
+            total: this.cartTotal
+          }
+        };
+
+        const response = await fetch(`${this.API_BASE_URL}/create-checkout`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(checkoutData)
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to create checkout');
+        }
+
+        const result = await response.json();
+
+        if (result.checkoutUrl) {
+          // Store order ID for potential retry
+          this.pendingOrderId = result.orderId;
+          // Redirect to Stripe Checkout
+          window.location.href = result.checkoutUrl;
+        } else {
+          throw new Error('No checkout URL received');
+        }
+
+      } catch (error) {
+        console.error('Checkout error:', error);
+        alert('Something went wrong creating checkout. Please try again!');
+        this.submitting = false;
+      }
+    },
+
+    async retryPayment() {
+      // For cancelled payments, we could create a new checkout session
+      // For now, just reset and let user try again
+      this.paymentCancelled = false;
+      this.pendingOrderId = null;
+      // User will need to submit again to create a new order
+    },
+    
+    async submitContact() {
+      if (!this.canSubmitContact || this.contactSubmitting) return;
+      this.contactSubmitting = true;
+      
+      try {
+        const contactData = {
+          fields: {
+            'Name': this.contact.name,
+            'Email': this.contact.email,
+            'Message': this.contact.message,
+            'Created': new Date().toISOString()
+          }
+        };
+        
+        const response = await fetch(
+          `${this.API_BASE_URL}/submit-contact`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(contactData)
+          }
+        );
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Failed to submit contact: ${errorText}`);
+        }
+        
+        this.contactSuccess = true;
+        
+      } catch (error) {
+        console.error('Failed to submit contact:', error);
+        alert('Something went wrong. Please try again!');
+      } finally {
+        this.contactSubmitting = false;
+      }
+    }
+  };
+}
+</script>
+
+<script src="config.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+</body>
+</html>
+

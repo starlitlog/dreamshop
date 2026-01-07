@@ -1,0 +1,459 @@
+  <main class="max-w-6xl mx-auto px-4 py-8">
+    
+    <!-- Loading State -->
+    <div x-show="loading" class="text-center py-20">
+      <div class="inline-block w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+      <p class="mt-4 text-gray-500">Loading awesome prints...</p>
+    </div>
+
+    <!-- HOME PAGE -->
+    <div x-show="!loading && page === 'home'">
+      <!-- Hero - TODO: Update your welcome message -->
+      <div class="text-center mb-12">
+        <h2 class="text-4xl sm:text-5xl font-bold text-gray-800 mb-4">
+          Welcome to <span class="gradient-text">Your Shop</span>!
+        </h2>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-4">
+          Your welcome message here. Tell customers what makes your shop special!
+        </p>
+        <div class="inline-block bg-gradient-to-r from-green-100 to-emerald-100 border border-green-200 rounded-full px-6 py-2 text-green-700 font-medium text-sm">
+          🚚 FREE shipping on orders $25+ • 📍 Event pickup available
+        </div>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="max-w-md mx-auto mb-6">
+        <div class="relative flex gap-2">
+          <div class="relative flex-grow">
+            <input
+              type="text"
+              x-model="searchQuery"
+              @input="performSearch()"
+              placeholder="Search prints..."
+              class="w-full px-5 py-3 pl-12 pr-10 rounded-full border-2 border-purple-100 focus:border-purple-400 outline-none bg-white shadow-sm text-gray-700 placeholder-gray-400"
+            >
+            <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            <button
+              x-show="searchQuery"
+              @click="clearSearch()"
+              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter -->
+      <div class="flex justify-center gap-2 mb-8 flex-wrap">
+        <button @click="clearAllFilters()" class="px-4 py-2 rounded-full font-medium transition-all" :class="selectedTags.length === 0 && !madeByMeFilter ? 'bg-purple-600 text-white' : 'bg-white text-gray-600 hover:bg-purple-100'">All Prints</button>
+        <button @click="toggleMadeByMeFilter()" class="px-4 py-2 rounded-full font-medium transition-all" :class="madeByMeFilter ? 'bg-purple-600 text-white' : 'bg-white text-gray-600 hover:bg-purple-100'">✨ My Designs</button>
+        <template x-for="tag in availableTags" :key="tag">
+          <button @click="toggleTagFilter(tag)" class="px-4 py-2 rounded-full font-medium transition-all" :class="selectedTags.includes(tag) ? 'bg-purple-600 text-white' : 'bg-white text-gray-600 hover:bg-purple-100'" x-text="tag"></button>
+        </template>
+      </div>
+
+      <!-- Products Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <template x-for="product in products" :key="product.id">
+          <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover flex flex-col h-full">
+            <div class="relative h-48 bg-gradient-to-br from-purple-100 to-pink-100">
+              <img @click="openImageModal(product)" :src="product.image" :alt="product.name" class="w-full h-full object-cover cursor-pointer hover:opacity-90 transition-opacity">
+              <span x-show="product.pinned" class="absolute top-3 right-3 bg-gradient-to-r from-red-400 to-pink-400 text-white text-xs font-bold px-2 py-1 rounded-full shadow">📌</span>
+              <span x-show="product.madeByMe" class="absolute top-3 left-3 bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs font-bold px-3 py-1 rounded-full shadow">✨ My Design!</span>
+              <span x-show="product.images.length > 1" class="absolute bottom-3 right-3 bg-black/60 text-white text-xs px-2 py-1 rounded-full">📷 <span x-text="product.images.length"></span></span>
+            </div>
+            <div class="p-5 flex flex-col flex-grow">
+              <h3 class="text-xl font-bold text-gray-800" x-text="product.name"></h3>
+              <p class="text-gray-500 text-sm mb-3 line-clamp-2" x-text="product.description"></p>
+              
+              <!-- Tags -->
+              <div x-show="product.tags && product.tags.length > 0" class="mb-2">
+                <div class="flex gap-1 flex-wrap">
+                  <template x-for="tag in product.tags" :key="tag">
+                    <span class="text-xs bg-purple-100 text-purple-600 px-2 py-1 rounded-full" x-text="tag"></span>
+                  </template>
+                </div>
+              </div>
+              
+              <!-- Variants -->
+              <div x-show="product.colors && product.colors.length > 0" class="mb-3">
+                <p class="text-xs text-gray-400 mb-1">Colors:</p>
+                <div class="flex gap-1 flex-wrap">
+                  <template x-for="color in product.colors" :key="color">
+                    <span class="text-xs bg-gray-100 px-2 py-1 rounded-full" x-text="color"></span>
+                  </template>
+                </div>
+              </div>
+              
+              <!-- Price and Button - Always at bottom -->
+              <div class="flex items-center justify-between mt-auto">
+                <span class="text-2xl font-bold text-purple-600">$<span x-text="formatPrice(product.price)"></span></span>
+                <button @click="openProductModal(product)" class="bg-gradient-to-r from-green-400 to-emerald-500 text-white px-4 py-2 rounded-full font-medium hover:shadow-lg transition-all">
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+      
+      <!-- No Results -->
+      <div x-show="!loading && products.length === 0" class="text-center py-12">
+        <div class="text-6xl mb-4">🔍</div>
+        <p class="text-gray-500">
+          <span x-show="searchQuery && selectedTags.length === 0 && !madeByMeFilter">No products found for "<span x-text="searchQuery" class="font-medium"></span>"</span>
+          <span x-show="(searchQuery && (selectedTags.length > 0 || madeByMeFilter)) || (!searchQuery && (selectedTags.length > 0 || madeByMeFilter))">No products match your current filters.</span>
+          <span x-show="!searchQuery && selectedTags.length === 0 && !madeByMeFilter">No products available.</span>
+        </p>
+        <button x-show="searchQuery || selectedTags.length > 0 || madeByMeFilter" @click="searchQuery = ''; clearAllFilters()" class="mt-4 px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full font-medium transition-colors">
+          Clear Filters
+        </button>
+      </div>
+      
+      <!-- Load More / Loading More -->
+      <div x-show="hasMoreProducts || loadingMore" class="text-center mt-8">
+        <div x-show="loadingMore" class="inline-block w-8 h-8 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+        <button x-show="!loadingMore && hasMoreProducts" @click="loadMoreProducts()" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-full font-medium hover:shadow-lg transition-all">
+          Load More Products
+        </button>
+      </div>
+    </div>
+
+    <!-- DEALS PAGE -->
+    <div x-show="page === 'deals'" class="max-w-4xl mx-auto">
+      <!-- Hero -->
+      <div class="text-center mb-12">
+        <h2 class="text-4xl sm:text-5xl font-bold text-gray-800 mb-4">
+          <span class="gradient-text">Deals</span> & Savings! 🏷️
+        </h2>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+          Check out our current deals! Discounts are automatically applied at checkout when you qualify.
+        </p>
+      </div>
+
+      <!-- Loading State -->
+      <div x-show="loadingDeals" class="text-center py-20">
+        <div class="inline-block w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+        <p class="mt-4 text-gray-500">Loading deals...</p>
+      </div>
+
+      <!-- Deals Grid -->
+      <div x-show="!loadingDeals && deals.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <template x-for="deal in deals" :key="deal.id">
+          <div class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover">
+            <div class="bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 p-4 text-center">
+              <div class="text-white text-4xl font-bold">
+                <span x-text="deal.discountType === 'Percentage' ? deal.discountValue + '%' : '$' + deal.discountValue"></span>
+                <span class="text-xl font-normal">OFF</span>
+              </div>
+            </div>
+            <div class="p-6">
+              <h3 class="text-xl font-bold text-gray-800 mb-2" x-text="deal.name"></h3>
+              <p x-show="deal.description" class="text-gray-500 mb-4" x-text="deal.description"></p>
+              <div class="flex items-center gap-2 text-sm">
+                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full font-medium">
+                  Min. order: $<span x-text="deal.minAmount"></span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <!-- No Deals -->
+      <div x-show="!loadingDeals && deals.length === 0" class="text-center py-12">
+        <div class="text-6xl mb-4">🎁</div>
+        <h3 class="text-2xl font-bold text-gray-700 mb-2">No Active Deals Right Now</h3>
+        <p class="text-gray-500 mb-6">Check back soon for exciting discounts and special offers!</p>
+        <button @click="page = 'home'" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-full font-bold hover:shadow-lg transition-all">
+          Browse Our Shop
+        </button>
+      </div>
+
+      <!-- CTA -->
+      <div x-show="!loadingDeals && deals.length > 0" class="mt-12 text-center">
+        <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-3xl p-8">
+          <h3 class="text-2xl font-bold text-gray-800 mb-4">Ready to Save?</h3>
+          <p class="text-gray-600 mb-6">Deals are automatically applied when your cart qualifies!</p>
+          <button @click="page = 'home'" class="inline-block bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-full font-bold hover:shadow-lg transition-all">
+            Start Shopping
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EVENTS PAGE -->
+    <div x-show="page === 'events'" class="max-w-4xl mx-auto">
+      <!-- Hero -->
+      <div class="text-center mb-12">
+        <h2 class="text-4xl sm:text-5xl font-bold text-gray-800 mb-4">
+          <!-- TODO: Update section header -->
+          Come Visit <span class="gradient-text">Our Shop</span>! 📍
+        </h2>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+          Find me at local markets and events! Come see all my latest prints in person and discover exclusive event-only items.
+        </p>
+      </div>
+
+      <!-- Filter -->
+      <div class="flex justify-center gap-2 mb-8 flex-wrap">
+        <button @click="eventFilter = 'upcoming'" class="px-4 py-2 rounded-full font-medium transition-all" :class="eventFilter === 'upcoming' ? 'bg-purple-600 text-white' : 'bg-white text-gray-600 hover:bg-purple-100'">Upcoming Events</button>
+        <button @click="eventFilter = 'past'" class="px-4 py-2 rounded-full font-medium transition-all" :class="eventFilter === 'past' ? 'bg-purple-600 text-white' : 'bg-white text-gray-600 hover:bg-purple-100'">Past Events</button>
+        <button @click="eventFilter = 'all'" class="px-4 py-2 rounded-full font-medium transition-all" :class="eventFilter === 'all' ? 'bg-purple-600 text-white' : 'bg-white text-gray-600 hover:bg-purple-100'">All Events</button>
+      </div>
+
+      <!-- Loading State -->
+      <div x-show="loadingEvents" class="text-center py-20">
+        <div class="inline-block w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin"></div>
+        <p class="mt-4 text-gray-500">Loading events...</p>
+      </div>
+
+      <!-- Events Grid -->
+      <div x-show="!loadingEvents" class="space-y-6">
+        <template x-for="event in filteredEvents" :key="event.id">
+          <div @click="openEventModal(event)" class="bg-white rounded-3xl shadow-xl overflow-hidden card-hover cursor-pointer" :class="event.featured && 'ring-2 ring-yellow-400'">
+            <div class="p-6">
+              <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                <!-- Event Info -->
+                <div class="flex-grow">
+                  <div class="flex items-start gap-3 mb-4">
+                    <div class="flex-shrink-0">
+                      <div class="bg-gradient-to-br from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                        <span x-text="new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })"></span>
+                      </div>
+                      <div x-show="event.featured" class="bg-yellow-400 text-yellow-900 px-2 py-1 rounded-full text-xs font-bold mt-1 text-center">
+                        ⭐ Featured
+                      </div>
+                    </div>
+                    <div class="flex-grow">
+                      <h3 class="text-2xl font-bold text-gray-800" x-text="event.name"></h3>
+                      <div x-show="event.eventType || (event.city && event.state)" class="flex items-center gap-2 text-gray-500 text-sm mt-1">
+                        <span x-show="event.eventType" x-text="event.eventType"></span>
+                        <span x-show="event.eventType && event.city && event.state">•</span>
+                        <span x-show="event.city && event.state" x-text="event.city + ', ' + event.state"></span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <p x-show="event.description" class="text-gray-600 mb-4" x-text="event.description"></p>
+                  
+                  <!-- Event Details -->
+                  <div class="space-y-2 text-sm text-gray-500">
+                    <div x-show="event.startTime || event.time" class="flex items-center gap-2">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                      <span>
+                        <span x-text="event.startTime || event.time"></span>
+                        <span x-show="event.endTime"> - <span x-text="event.endTime"></span></span>
+                      </span>
+                    </div>
+                    <div x-show="event.location" class="flex items-start gap-2">
+                      <svg class="w-4 h-4 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                      <span x-text="event.location"></span>
+                    </div>
+                    <div x-show="event.specialItems" class="flex items-start gap-2 text-purple-600">
+                      <svg class="w-4 h-4 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+                      <span><strong>Special:</strong> <span x-text="event.specialItems"></span></span>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Actions -->
+                <div class="flex-shrink-0 flex flex-col gap-2">
+                  <div x-show="event.website" class="text-right">
+                    <a :href="event.website" target="_blank" class="inline-block bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors">
+                      Event Info
+                    </a>
+                  </div>
+                  <div class="text-right">
+                    <span class="inline-block px-3 py-1 rounded-full text-xs font-medium" 
+                          :class="event.status === 'Upcoming' ? 'bg-green-100 text-green-800' : 
+                                 event.status === 'Completed' ? 'bg-gray-100 text-gray-600' : 
+                                 'bg-red-100 text-red-800'" 
+                          x-text="event.status">
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+      
+      <div x-show="!loadingEvents && filteredEvents.length === 0" class="text-center py-12">
+        <div class="text-6xl mb-4">📅</div>
+        <p class="text-gray-500">
+          <span x-show="eventFilter === 'upcoming'">No upcoming events scheduled. Check back soon!</span>
+          <span x-show="eventFilter === 'past'">No past events to show.</span>
+          <span x-show="eventFilter === 'all'">No events found.</span>
+        </p>
+      </div>
+      
+      <!-- Call to Action -->
+      <div x-show="!loadingEvents && eventFilter === 'upcoming'" class="mt-12 text-center">
+        <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-3xl p-8">
+          <h3 class="text-2xl font-bold text-gray-800 mb-4">Want Me at Your Event?</h3>
+          <p class="text-gray-600 mb-6">I love participating in local markets, school events, and community fairs!</p>
+          <button @click="showContactModal = true" class="inline-block bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-full font-bold hover:shadow-lg transition-all">
+            Contact Us
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABOUT PAGE -->
+    <div x-show="page === 'about'" class="max-w-2xl mx-auto">
+      <div class="bg-white rounded-3xl shadow-xl p-8">
+        <div class="text-center mb-6">
+          <div class="w-32 h-32 mx-auto bg-gradient-to-br from-purple-400 via-pink-400 to-blue-400 blob flex items-center justify-center text-6xl shadow-lg">👧🏻</div>
+          <!-- TODO: Update with your story -->
+          <h2 class="text-3xl font-bold text-gray-800 mt-6">Hi, I'm the Creator!</h2>
+        </div>
+        <div class="space-y-4 text-gray-600 text-lg">
+          <!-- TODO: Update with your about content -->
+          <p>Tell your story here. What makes your shop special? What do you create or sell?</p>
+          <p>Add your background, inspiration, and what customers can expect from you.</p>
+          <p>Share why you started this shop and what drives your passion.</p>
+        </div>
+        <div class="mt-8 p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl text-center">
+          <p class="text-gray-600">📦 Ships anywhere! • 📍 Event pickup available too!</p>
+          <p class="text-sm text-gray-400 mt-1">Questions? Have a parent email us!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CART PAGE -->
+    <div x-show="page === 'cart'" class="max-w-2xl mx-auto">
+      <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Your Cart 🛒</h2>
+      
+      <!-- Payment Success -->
+      <div x-show="paymentSuccess" class="bg-white rounded-3xl shadow-xl p-8 text-center">
+        <div class="text-7xl mb-4">🎉</div>
+        <h3 class="text-2xl font-bold text-green-600">Payment Successful!</h3>
+        <p class="text-gray-600 mt-2 mb-6">Thank you so much for your order! I'll start working on it right away and ship it to you soon!</p>
+        <p class="text-sm text-gray-400 mb-4">You'll receive an email confirmation shortly.</p>
+        <button @click="paymentSuccess = false; page = 'home'" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg transition-all">← Continue Shopping</button>
+      </div>
+
+      <!-- Payment Cancelled -->
+      <div x-show="paymentCancelled" class="bg-white rounded-3xl shadow-xl p-8 text-center">
+        <div class="text-7xl mb-4">😢</div>
+        <h3 class="text-2xl font-bold text-orange-600">Payment Cancelled</h3>
+        <p class="text-gray-600 mt-2 mb-6">No worries! Your order is still saved. You can try again whenever you're ready.</p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+          <button @click="retryPayment()" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg transition-all">Try Payment Again</button>
+          <button @click="paymentCancelled = false; page = 'home'" class="text-purple-600 font-medium hover:underline px-6 py-3">← Continue Shopping</button>
+        </div>
+      </div>
+      
+      <!-- Empty Cart -->
+      <div x-show="!paymentSuccess && !paymentCancelled && cart.length === 0" class="bg-white rounded-3xl shadow-xl p-8 text-center">
+        <div class="text-6xl mb-4">🛒</div>
+        <p class="text-gray-500">Your cart is empty!</p>
+        <button @click="page = 'home'" class="mt-4 text-purple-600 font-medium hover:underline">← Go find something cool</button>
+      </div>
+      
+      <!-- Cart Items -->
+      <div x-show="!paymentSuccess && !paymentCancelled && cart.length > 0" class="space-y-4">
+        <div class="bg-white rounded-3xl shadow-xl p-6">
+          <template x-for="(item, index) in cart" :key="index">
+            <div class="flex items-center justify-between py-4 border-b last:border-0">
+              <div class="flex items-center gap-4">
+                <img :src="item.image" :alt="item.name" class="w-16 h-16 object-cover rounded-xl">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <p class="font-bold text-gray-800" x-text="item.name"></p>
+                    <span x-show="item.sku" class="text-xs font-mono bg-gray-100 text-gray-400 px-1.5 py-0.5 rounded">SKU: <span x-text="item.sku"></span></span>
+                  </div>
+                  <p x-show="item.selectedColor" class="text-sm text-gray-500">Color: <span x-text="item.selectedColor"></span></p>
+                  <p x-show="item.selectedSize" class="text-sm text-gray-500">Size: <span x-text="item.selectedSize"></span></p>
+                  <div class="flex items-center gap-2 mt-1">
+                    <button @click="updateQty(index, -1)" class="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center">-</button>
+                    <span x-text="item.qty" class="font-medium"></span>
+                    <button @click="updateQty(index, 1)" class="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center">+</button>
+                  </div>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="font-bold text-purple-600">$<span x-text="formatPrice(item.price * item.qty)"></span></p>
+                <button @click="removeFromCart(index)" class="text-sm text-red-400 hover:text-red-600 mt-1">Remove</button>
+              </div>
+            </div>
+          </template>
+          
+          <div class="pt-4 border-t mt-4">
+            <!-- Free Shipping Progress -->
+            <div x-show="!order.localPickup && cartSubtotal < freeShippingThreshold && cartSubtotal > 0" class="mb-4 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
+              <div class="text-center mb-2">
+                <span class="text-green-600 font-medium text-sm">🚚 Add $<span x-text="amountForFreeShipping.toFixed(2)"></span> more for FREE shipping!</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-gradient-to-r from-green-400 to-emerald-500 h-2 rounded-full transition-all" :style="`width: ${Math.min(100, (cartSubtotal / freeShippingThreshold) * 100)}%`"></div>
+              </div>
+            </div>
+            
+            <div x-show="!order.localPickup && cartSubtotal >= freeShippingThreshold" class="mb-4 p-3 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200 text-center">
+              <span class="text-green-600 font-medium">🎉 You've earned FREE shipping!</span>
+            </div>
+            
+            <div class="flex justify-between text-gray-600 mb-2">
+              <span>Subtotal</span>
+              <span>$<span x-text="cartSubtotal.toFixed(2)"></span></span>
+            </div>
+            <!-- Applied Deal -->
+            <div x-show="appliedDeal" class="flex justify-between text-green-600 mb-2">
+              <span class="flex items-center gap-1">
+                <span>🏷️</span>
+                <span x-text="appliedDeal ? appliedDeal.name : ''"></span>
+              </span>
+              <span>-$<span x-text="discountAmount.toFixed(2)"></span></span>
+            </div>
+            <div class="flex justify-between text-gray-600 mb-2">
+              <span>Shipping</span>
+              <span x-text="order.localPickup ? 'FREE (Local Pickup)' : (shippingCost === 0 ? (cartSubtotal >= freeShippingThreshold ? 'FREE (Orders $' + freeShippingThreshold + '+)' : 'FREE') : '$' + shippingCost)"></span>
+            </div>
+            <div class="flex justify-between text-xl font-bold text-gray-800 pt-2 border-t">
+              <span>Total</span>
+              <span class="text-purple-600">$<span x-text="cartTotal.toFixed(2)"></span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Checkout Form -->
+        <div class="bg-white rounded-3xl shadow-xl p-6">
+          <h3 class="font-bold text-gray-800 mb-4 text-lg">👤 Your Information</h3>
+
+          <div class="space-y-3">
+            <div class="grid grid-cols-2 gap-3">
+              <input type="text" x-model="order.firstName" placeholder="First Name *" class="w-full px-4 py-3 rounded-xl border-2 border-purple-100 focus:border-purple-400 outline-none" required>
+              <input type="text" x-model="order.lastName" placeholder="Last Name *" class="w-full px-4 py-3 rounded-xl border-2 border-purple-100 focus:border-purple-400 outline-none" required>
+            </div>
+            <input type="email" x-model="order.email" placeholder="Email Address *" class="w-full px-4 py-3 rounded-xl border-2 border-purple-100 focus:border-purple-400 outline-none" required>
+            <textarea x-model="order.notes" placeholder="Special requests? (gift message, color preferences, etc.)" class="w-full px-4 py-3 rounded-xl border-2 border-purple-100 focus:border-purple-400 outline-none resize-none h-20"></textarea>
+
+            <div class="bg-purple-50 rounded-xl p-4">
+              <label class="flex items-center gap-3 cursor-pointer">
+                <input type="checkbox" x-model="order.localPickup" class="w-5 h-5 rounded text-purple-600">
+                <span class="text-gray-700">Local/Event pickup instead (free!)</span>
+              </label>
+              <p x-show="!order.localPickup" class="text-xs text-gray-500 mt-2 ml-8">Shipping address will be collected at checkout</p>
+            </div>
+          </div>
+          
+          <button @click="proceedToCheckout()" :disabled="!canSubmit || submitting" class="w-full mt-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-4 rounded-xl font-bold text-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+            <span x-show="!submitting">Proceed to Secure Checkout →</span>
+            <span x-show="submitting">Preparing checkout...</span>
+          </button>
+
+          <p class="text-xs text-gray-400 text-center mt-3 flex items-center justify-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+            Secure payment powered by Stripe
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>

@@ -41,3 +41,6 @@ logs
 
 # Wrangler build artifacts
 _workers/.wrangler/
+
+# Build output (Cloudflare Pages builds this automatically)
+dist/

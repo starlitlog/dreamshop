@@ -1,0 +1,53 @@
+  <!-- Header -->
+  <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between relative">
+      <a href="#" @click.prevent="page = 'home'" class="flex items-center gap-3 group">
+        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 blob flex items-center justify-center text-white text-xl font-bold shadow-lg">3D</div>
+        <div>
+          <!-- TODO: Update your shop name and tagline -->
+          <h1 class="text-2xl font-bold brand gradient-text">Your Shop</h1>
+          <p class="text-xs text-gray-500">Your tagline here</p>
+        </div>
+      </a>
+      
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex items-center gap-4">
+        <button @click="page = 'home'" class="text-gray-600 hover:text-purple-600 font-medium px-3 py-2 rounded-lg transition-colors" :class="page === 'home' && 'text-purple-600 bg-purple-50'">Shop</button>
+        <button @click="page = 'deals'" class="text-gray-600 hover:text-purple-600 font-medium px-3 py-2 rounded-lg transition-colors" :class="page === 'deals' && 'text-purple-600 bg-purple-50'">Deals</button>
+        <button @click="page = 'events'" class="text-gray-600 hover:text-purple-600 font-medium px-3 py-2 rounded-lg transition-colors" :class="page === 'events' && 'text-purple-600 bg-purple-50'">Events</button>
+        <button @click="page = 'about'" class="text-gray-600 hover:text-purple-600 font-medium px-3 py-2 rounded-lg transition-colors" :class="page === 'about' && 'text-purple-600 bg-purple-50'">About</button>
+        <button @click="page = 'cart'" class="relative bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full font-medium hover:shadow-lg transition-all flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+          Cart
+          <span x-show="cartCount > 0" x-text="cartCount" class="absolute -top-2 -right-2 bg-yellow-400 text-purple-900 w-6 h-6 rounded-full text-sm font-bold flex items-center justify-center"></span>
+        </button>
+      </nav>
+
+      <!-- Mobile Navigation -->
+      <div class="md:hidden flex items-center gap-2">
+        <!-- Mobile Cart Button -->
+        <button @click="page = 'cart'" class="relative bg-gradient-to-r from-purple-500 to-pink-500 text-white p-2 rounded-full font-medium hover:shadow-lg transition-all">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+          <span x-show="cartCount > 0" x-text="cartCount" class="absolute -top-2 -right-2 bg-yellow-400 text-purple-900 w-6 h-6 rounded-full text-sm font-bold flex items-center justify-center"></span>
+        </button>
+        
+        <!-- Burger Menu Button -->
+        <button @click="showMobileMenu = !showMobileMenu" class="p-2 text-gray-600 hover:text-purple-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path x-show="!showMobileMenu" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            <path x-show="showMobileMenu" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Mobile Menu Dropdown -->
+    <div x-show="showMobileMenu" x-transition.opacity.duration.200ms @click.away="showMobileMenu = false" class="md:hidden bg-white border-t shadow-lg">
+      <nav class="max-w-6xl mx-auto px-4 py-4 space-y-2">
+        <button @click="page = 'home'; showMobileMenu = false" class="w-full text-left text-gray-600 hover:text-purple-600 font-medium py-3 px-2 rounded-lg transition-colors" :class="page === 'home' && 'text-purple-600 bg-purple-50'">🏠 Shop</button>
+        <button @click="page = 'deals'; showMobileMenu = false" class="w-full text-left text-gray-600 hover:text-purple-600 font-medium py-3 px-2 rounded-lg transition-colors" :class="page === 'deals' && 'text-purple-600 bg-purple-50'">🏷️ Deals</button>
+        <button @click="page = 'events'; showMobileMenu = false" class="w-full text-left text-gray-600 hover:text-purple-600 font-medium py-3 px-2 rounded-lg transition-colors" :class="page === 'events' && 'text-purple-600 bg-purple-50'">📅 Events</button>
+        <button @click="page = 'about'; showMobileMenu = false" class="w-full text-left text-gray-600 hover:text-purple-600 font-medium py-3 px-2 rounded-lg transition-colors" :class="page === 'about' && 'text-purple-600 bg-purple-50'">💜 About</button>
+      </nav>
+    </div>
+  </header>

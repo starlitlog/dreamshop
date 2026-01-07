@@ -90,20 +90,50 @@ cd _workers
 wrangler deploy
 ```
 
-### 7. Deploy frontend
+### 7. Build and test locally
 
-The frontend is static HTML. Deploy to:
-- **Cloudflare Pages** (recommended)
-- GitHub Pages
-- Netlify
-- Any static host
+```bash
+make build    # Build src/ to dist/
+make dev      # Build and preview at localhost:8000
+```
 
-### 8. Set up Stripe webhooks
+### 8. Deploy frontend
+
+Deploy to Cloudflare Pages:
+1. Connect your GitHub repo in Cloudflare dashboard
+2. Set build command: `node build.js`
+3. Set output directory: `dist`
+
+Alternative hosts: GitHub Pages, Netlify, Vercel (all support build commands)
+
+### 9. Set up Stripe webhooks
 
 1. Go to [Stripe Dashboard > Webhooks](https://dashboard.stripe.com/webhooks)
 2. Add endpoint: `https://api.your-domain.com/v1/stripe-webhook`
 3. Select event: `checkout.session.completed`
 4. Copy signing secret to Worker secrets
+
+## Project Structure
+
+```
+dreamshop/
+├── src/
+│   ├── index.html          # Template with include markers
+│   └── partials/
+│       ├── head.html       # <head> section (meta, styles)
+│       ├── header.html     # Navigation header
+│       ├── pages.html      # All page content (shop, deals, events, about, cart)
+│       ├── modals.html     # Product/event modals
+│       ├── footer.html     # Footer with social links
+│       └── scripts.html    # Alpine.js app logic
+├── dist/                   # Built output (git-ignored for CF Pages)
+├── _workers/
+│   ├── worker.js          # Cloudflare Worker API
+│   └── wrangler.toml      # Worker configuration
+├── config.js              # Shop configuration
+├── build.js               # Build script
+└── Makefile               # Development commands
+```
 
 ## Configuration
 
