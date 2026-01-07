@@ -8,9 +8,9 @@ This document outlines the costs, limits, and scaling path for running DreamShop
 
 | Tier | Monthly Cost | Products | MAU | CCU | Best For |
 |------|-------------|----------|-----|-----|----------|
-| **Free** | $0 | 1,000 | ~3,000 | ~100 | Side projects, testing |
-| **Starter** | $5 | 1,000 | ~200K-500K | ~10K | Small shops |
-| **Growth** | $25 | 50,000 | ~200K-500K | ~10K | Growing businesses |
+| **Free** | $0 | 1,000 | ~100K-150K | ~3K-5K | Side projects, small shops |
+| **Starter** | $5 | 1,000 | ~200K-500K | ~10K-15K | Growing shops |
+| **Growth** | $25 | 50,000 | ~200K-500K | ~10K-15K | Large catalogs |
 | **Scale** | $50+ | Unlimited | 1M+ | 50K+ | High-volume stores |
 
 ---
@@ -34,8 +34,8 @@ This document outlines the costs, limits, and scaling path for running DreamShop
 | **Products** | 1,000 | Airtable record limit |
 | **Events** | Shared with products | Same 1,000 record pool |
 | **Images** | ~2,000 | 10GB ÷ ~5MB average |
-| **MAU** | ~3,000 | Limited by Worker requests (100K/day) |
-| **CCU** | ~100 | Peak concurrent users |
+| **MAU** | ~100K-150K | 100K requests/day ÷ ~20 per session |
+| **CCU** | ~3K-5K | Peak concurrent users |
 | **Sales Volume** | Unlimited | Stripe has no caps |
 
 ### Why It Works
@@ -43,10 +43,10 @@ This document outlines the costs, limits, and scaling path for running DreamShop
 DreamShop's 24-hour caching strategy means Airtable's 1,000 API calls/month limit is **never the bottleneck**. The Worker cache serves nearly all requests, hitting Airtable only on cache refresh (~3-5 calls per refresh).
 
 ### Ideal For
-- Kids' businesses, hobby projects
-- Testing and development
-- Low-traffic niche stores
-- Seasonal pop-up shops
+- Small to medium e-commerce businesses
+- Hobby projects and side businesses
+- Niche stores with limited SKUs
+- Seasonal or pop-up shops
 
 ---
 
@@ -186,14 +186,14 @@ At this point, consider migrating from Airtable to a more scalable database.
 
 | Platform | Monthly Cost | Products | Transaction Fee | MAU Limit |
 |----------|-------------|----------|-----------------|-----------|
-| **DreamShop** | $0 | 1,000 | 2.9% + $0.30 (Stripe) | ~3,000 |
+| **DreamShop** | $0 | 1,000 | 2.9% + $0.30 (Stripe) | ~100K-150K |
 | Shopify | $39+ | Unlimited | 2.9% + $0.30 + 2% | Unlimited |
 | BigCommerce | $39+ | Unlimited | 2.2-2.9% + $0.30 | $50K sales cap |
 | Squarespace | $27+ | Unlimited | 2.9% + $0.30 + 2% | Unlimited |
 | Wix | $29+ | Unlimited | 2.9% + $0.30 | Unlimited |
 | WooCommerce | $10-30+ (hosting) | Unlimited | 2.9% + $0.30 | Depends on host |
 
-**DreamShop advantage**: Only truly free option with no monthly fees.
+**DreamShop advantage**: Only truly free option with no monthly fees, supporting up to 150K MAU.
 
 ### At $5/month (DreamShop Starter)
 
@@ -259,11 +259,11 @@ $100 |                  ┌─────┘───────────�
      |      │     ┌───────────────────────────── Shopify Basic
  $25 |──────┴─────┴───────────────────────────── DreamShop Growth
      |
-  $5 |────────────────────────────────────────── DreamShop Starter
+  $5 |──────────────────────────────────────────── DreamShop Starter
      |
-  $0 |────────────────────────────────────────── DreamShop Free
+  $0 |──────────────────────────────────────────── DreamShop Free
      └────────────────────────────────────────────────────────────
-       1K      10K     50K    100K   200K   500K    MAU →
+       10K     50K    100K    150K   200K   500K    MAU →
 ```
 
 ---
@@ -271,21 +271,21 @@ $100 |                  ┌─────┘───────────�
 ## Upgrade Decision Tree
 
 ```
-START: Using DreamShop Free
+START: Using DreamShop Free (~100K-150K MAU capacity)
          │
          ▼
-    Need more than 100K requests/day?
+    Need more than 150K MAU OR want headroom?
          │
     YES  │  NO → Stay on Free
          ▼
-    Upgrade Workers to $5/mo (Starter)
+    Upgrade Workers to $5/mo (Starter) → ~200K-500K MAU
          │
          ▼
     Need more than 1,000 products?
          │
     YES  │  NO → Stay on Starter
          ▼
-    Upgrade Airtable to Team $20/mo (Growth)
+    Upgrade Airtable to Team $20/mo (Growth) → 50K products
          │
          ▼
     Need more than 50K products OR
@@ -306,10 +306,10 @@ START: Using DreamShop Free
 
 DreamShop's architecture is optimized for **cost efficiency at every scale**:
 
-1. **$0/month**: Perfect for small projects up to ~3K MAU
-2. **$5/month**: Unlocks massive traffic (~500K MAU) with minimal spend
+1. **$0/month**: Handles up to ~100K-150K MAU with 1K products
+2. **$5/month**: Unlocks ~200K-500K MAU capacity with minimal spend
 3. **$25/month**: Production-ready for growing businesses (50K products)
-4. **$50+/month**: Enterprise-grade with SQL migration
+4. **$50+/month**: Enterprise-grade with SQL migration (unlimited products)
 
 The key insight: **DreamShop's caching strategy makes it dramatically cheaper than traditional platforms** at equivalent scale, while giving you full ownership of your code and data.
 
